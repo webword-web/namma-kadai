@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: namma-kadai
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    plan: free
+    envVars:
+      - key: JWT_SECRET
+        value: nammakadai_super_secret_key_987654321
+      - key: EMAIL_BYPASS
+        value: "true"
+      - key: NODE_ENV
+        value: production

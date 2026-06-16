@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Namma Kadai | Admin Dashboard</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Styling -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!-- Theme Setter script (Executes immediately to avoid flashing) -->
+  <script src="/js/theme.js"></script>
+</head>
+<body class="bg-light-subtle">
+
+  <!-- Admin Login Section -->
+  <section id="admin-login-section" class="min-vh-100 d-flex align-items-center justify-content-center py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+          <div class="card shadow-lg border-0 rounded-4 p-4 bg-body">
+            <div class="text-center mb-4">
+              <i class="bi bi-shield-lock text-success display-4 mb-2"></i>
+              <h3 class="font-serif fw-bold text-success">Namma Kadai</h3>
+              <p class="text-muted small">Administration Dashboard Portal</p>
+            </div>
+            
+            <form id="admin-login-form">
+              <div class="mb-3">
+                <label for="admin-username" class="form-label small fw-bold">Username</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-person"></i></span>
+                  <input type="text" class="form-control" id="admin-username" required placeholder="admin">
+                </div>
+              </div>
+              <div class="mb-4">
+                <label for="admin-password" class="form-label small fw-bold">Password</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-key"></i></span>
+                  <input type="password" class="form-control" id="admin-password" required placeholder="••••••••">
+                </div>
+              </div>
+              
+              <div id="admin-login-msg" class="mb-3"></div>
+              
+              <button type="submit" class="btn btn-primary-custom w-100 py-2">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Log In
+              </button>
+            </form>
+            <div class="text-center mt-3">
+              <a href="/" class="small text-success text-decoration-none"><i class="bi bi-arrow-left"></i> Back to Storefront</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Admin Dashboard Section (Hidden by default) -->
+  <section id="admin-dashboard-section" class="d-none py-4 min-vh-100">
+    <div class="container">
+      
+      <!-- Dashboard Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-flower1 text-success fs-2"></i>
+          <div>
+            <h3 class="font-serif fw-bold text-success mb-0">Namma Kadai</h3>
+            <span class="text-muted small">Merchant Operations Control Panel</span>
+          </div>
+        </div>
+        
+        <div class="d-flex align-items-center gap-3">
+          <button class="theme-switch" id="theme-toggle" aria-label="Toggle Theme">
+            <i class="bi bi-moon-stars-fill"></i>
+          </button>
+          
+          <div class="dropdown">
+            <button class="btn btn-outline-success dropdown-toggle px-3 rounded-pill fw-semibold" type="button" id="adminDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle me-1"></i> Operator
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="adminDropdown">
+              <li><a class="dropdown-item" href="/"><i class="bi bi-shop me-2"></i>View Shopfront</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><button class="dropdown-item text-danger" id="admin-logout-btn"><i class="bi bi-power me-2"></i>Sign Out</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Stat Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-4 col-sm-6">
+          <div class="card shadow-sm border-0 rounded-4 bg-body p-4 d-flex flex-row align-items-center justify-content-between">
+            <div>
+              <p class="text-muted small mb-1">Total Orders</p>
+              <h3 class="fw-bold mb-0" id="stat-total-orders">0</h3>
+            </div>
+            <div class="bg-success-subtle text-success rounded-circle p-3 fs-3"><i class="bi bi-receipt"></i></div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="card shadow-sm border-0 rounded-4 bg-body p-4 d-flex flex-row align-items-center justify-content-between">
+            <div>
+              <p class="text-muted small mb-1">Revenue Summary</p>
+              <h3 class="fw-bold mb-0 text-success" id="stat-revenue">Rs. 0</h3>
+            </div>
+            <div class="bg-success-subtle text-success rounded-circle p-3 fs-3"><i class="bi bi-currency-rupee"></i></div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="card shadow-sm border-0 rounded-4 bg-body p-4 d-flex flex-row align-items-center justify-content-between">
+            <div>
+              <p class="text-muted small mb-1">Today's Orders</p>
+              <h3 class="fw-bold mb-0" id="stat-today-orders">0</h3>
+            </div>
+            <div class="bg-info-subtle text-info rounded-circle p-3 fs-3"><i class="bi bi-calendar-check"></i></div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6 col-lg-3">
+          <div class="card shadow-sm border-0 rounded-3 bg-body p-3 d-flex flex-row align-items-center justify-content-between">
+            <div>
+              <p class="text-muted small mb-1">Pending Status</p>
+              <h4 class="fw-bold mb-0 text-warning" id="stat-pending">0</h4>
+            </div>
+            <div class="text-warning fs-3"><i class="bi bi-clock-history"></i></div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6 col-lg-3">
+          <div class="card shadow-sm border-0 rounded-3 bg-body p-3 d-flex flex-row align-items-center justify-content-between">
+            <div>
+              <p class="text-muted small mb-1">Delivered Status</p>
+              <h4 class="fw-bold mb-0 text-success" id="stat-completed">0</h4>
+            </div>
+            <div class="text-success fs-3"><i class="bi bi-check-circle-fill"></i></div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6 col-lg-3">
+          <div class="card shadow-sm border-0 rounded-3 bg-body p-3 d-flex flex-row align-items-center justify-content-between">
+            <div>
+              <p class="text-muted small mb-1">Cancelled Status</p>
+              <h4 class="fw-bold mb-0 text-danger" id="stat-cancelled">0</h4>
+            </div>
+            <div class="text-danger fs-3"><i class="bi bi-x-circle-fill"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters & Searching Controls -->
+      <div class="card shadow-sm border-0 rounded-4 p-4 bg-body mb-4">
+        <div class="row g-3 align-items-center justify-content-between">
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">Search Customer Name</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-search"></i></span>
+              <input type="text" id="admin-search-input" class="form-control" placeholder="Search...">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small fw-bold">Filter Status</label>
+            <select class="form-select" id="admin-status-filter">
+              <option value="All">All Statuses</option>
+              <option value="Pending">Pending</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Packed">Packed</option>
+              <option value="Out For Delivery">Out For Delivery</option>
+              <option value="Delivered">Delivered</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div class="col-md-3 text-md-end mt-4 mt-md-0">
+            <button class="btn btn-outline-success rounded-pill px-4 fw-semibold" id="admin-export-btn">
+              <i class="bi bi-download me-1"></i> Export CSV
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders Main List Table -->
+      <div class="card shadow-sm border-0 rounded-4 bg-body overflow-hidden mb-4">
+        <div class="card-header bg-success text-white py-3">
+          <h5 class="mb-0 fw-bold"><i class="bi bi-list-task me-2"></i>Incoming Order Logs</h5>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Invoice</th>
+                <th>Customer Info</th>
+                <th>Order Date</th>
+                <th>Items Ordered</th>
+                <th>Grand Total</th>
+                <th>Current Status</th>
+                <th>Change Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-table-body">
+              <!-- Dynamically populated by admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ADMIN DETAILED ORDER MODAL -->
+  <div class="modal fade" id="adminOrderModal" tabindex="-1" aria-labelledby="adminOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title" id="adminOrderModalLabel"><i class="bi bi-info-circle-fill me-2"></i>Order Breakdown Details</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4" id="adminOrderModalBody">
+          <!-- Populated by admin.js -->
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">Close Window</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JavaScript Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Admin Controller -->
+  <script src="/js/admin.js"></script>
+</body>
+</html>
