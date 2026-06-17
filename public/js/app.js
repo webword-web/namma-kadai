@@ -222,7 +222,7 @@ function addToCartClick(productId) {
 
   saveCart();
   updateCartBadge();
-  
+
   // Instantly render cart drawer updates
   renderCartDrawer();
 
@@ -231,7 +231,7 @@ function addToCartClick(productId) {
     // Open cart drawer
     document.getElementById('cart-overlay').classList.add('active');
     document.getElementById('cart-drawer').classList.add('active');
-    
+
     // Highlight the item
     const drawerItem = document.getElementById(`cart-item-${productId}`);
     if (drawerItem) {
@@ -319,8 +319,6 @@ function renderCartDrawer() {
     `;
   });
 
-  const deliveryCharge = subtotal > 500 ? 0 : 30; // Free delivery over Rs.500
-  const grandTotal = subtotal + deliveryCharge;
 
   footerContainer.innerHTML = `
     <div class="cart-summary-row">
@@ -352,12 +350,12 @@ function animateFlyToCart(imgElement, startRect) {
   const cartIcon = document.getElementById('cart-btn');
   if (!cartIcon) return;
   const cartRect = cartIcon.getBoundingClientRect();
-  
+
   const flyer = document.createElement('img');
   flyer.src = imgElement.src;
   flyer.classList.add('flying-img');
   document.body.appendChild(flyer);
-  
+
   gsap.set(flyer, {
     left: startRect.left,
     top: startRect.top + window.scrollY,
@@ -365,7 +363,7 @@ function animateFlyToCart(imgElement, startRect) {
     height: startRect.height,
     borderRadius: '12px'
   });
-  
+
   gsap.to(flyer, {
     duration: 0.8,
     left: cartRect.left + (cartRect.width / 2) - 15,
@@ -378,8 +376,8 @@ function animateFlyToCart(imgElement, startRect) {
     onComplete: () => {
       flyer.remove();
       // Animate cart button bouncing
-      gsap.fromTo(cartIcon, 
-        { scale: 1 }, 
+      gsap.fromTo(cartIcon,
+        { scale: 1 },
         { scale: 1.3, duration: 0.12, yoyo: true, repeat: 1, ease: "power1.inOut" }
       );
     }
@@ -423,7 +421,7 @@ function openCheckoutModal() {
 
 async function handleCheckoutSubmit(e) {
   e.preventDefault();
-  
+
   const customerName = document.getElementById('cust-name').value.trim();
   const mobileNumber = document.getElementById('cust-mobile').value.trim();
   const alternativeMobile = document.getElementById('cust-alt-mobile').value.trim();
@@ -444,7 +442,8 @@ async function handleCheckoutSubmit(e) {
   }
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const deliveryCharge = subtotal > 500 ? 0 : 30;
+  const deliveryCharge = subtotal > 500 ? 0 : 0
+    ;
   const grandTotal = subtotal + deliveryCharge;
 
   const orderPayload = {
@@ -487,7 +486,7 @@ async function handleCheckoutSubmit(e) {
 
     // Render Invoice Preview Modal
     renderInvoicePreview(generatedOrder);
-    
+
     // Open Invoice Preview Modal
     const invoiceModal = new bootstrap.Modal(document.getElementById('invoiceModal'));
     invoiceModal.show();
@@ -621,10 +620,10 @@ Please confirm my order.`;
 
   const encodedMsg = encodeURIComponent(message);
   const waUrl = `https://wa.me/918525041700?text=${encodedMsg}`;
-  
+
   // Close invoice Modal
   bootstrap.Modal.getInstance(document.getElementById('invoiceModal')).hide();
-  
+
   // Redirect to WhatsApp
   window.open(waUrl, '_blank');
 }
@@ -662,10 +661,10 @@ async function handleOrderTracking() {
     }
 
     trackResults.innerHTML = '';
-    
+
     // Draw the latest order's tracking timeline
     const latestOrder = orders[0];
-    
+
     // Setup timeline tracking active indexes
     const statuses = ['Pending', 'Confirmed', 'Packed', 'Out For Delivery', 'Delivered'];
     const currentStatusIndex = statuses.indexOf(latestOrder.status);
@@ -762,7 +761,7 @@ async function handleOrderTracking() {
     setTimeout(() => {
       const line = document.getElementById('progress-line-track');
       if (!line) return;
-      
+
       const isMobile = window.innerWidth < 768;
       if (isMobile) {
         // Vertical height mapping
