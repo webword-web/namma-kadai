@@ -442,8 +442,7 @@ async function handleCheckoutSubmit(e) {
   }
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const deliveryCharge = subtotal > 500 ? 0 : 0
-    ;
+  const deliveryCharge = subtotal > 500 ? 0 : 0;
   const grandTotal = subtotal + deliveryCharge;
 
   const orderPayload = {
