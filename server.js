@@ -178,6 +178,27 @@ app.get('/api/orders/track/:mobile', async (req, res) => {
   }
 });
 
+// --- ADMIN LOGIN (ID + Password) ---
+
+const ADMIN_LOGIN_ID = '8525041700';
+const ADMIN_PASSWORD = 'nammakadai@8525';
+
+app.post('/api/admin/login', (req, res) => {
+  const { loginId, password } = req.body;
+
+  if (!loginId || !password) {
+    return res.status(400).json({ message: 'Login ID and Password are required.' });
+  }
+
+  if (loginId.trim() !== ADMIN_LOGIN_ID || password.trim() !== ADMIN_PASSWORD) {
+    return res.status(401).json({ message: 'Invalid Login ID or Password.' });
+  }
+
+  // Issue JWT token valid for 24 hours
+  const token = jwt.sign({ loginId: ADMIN_LOGIN_ID, role: 'admin' }, JWT_SECRET, { expiresIn: '24h' });
+  res.json({ token, message: 'Login successful.' });
+});
+
 // --- ADMIN ENDPOINTS ---
 
 // Get All Orders (Admin Dashboard)

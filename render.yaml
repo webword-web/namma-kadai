@@ -2,6 +2,7 @@ services:
   - type: web
     name: namma-kadai
     runtime: node
+    rootDir: .
     buildCommand: npm install
     startCommand: node server.js
     plan: free
@@ -12,3 +13,6 @@ services:
         value: "true"
       - key: NODE_ENV
         value: production
+      - key: FAST2SMS_API_KEY
+        sync: false
+

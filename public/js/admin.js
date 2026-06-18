@@ -4,44 +4,51 @@ let orders = [];
 let token = localStorage.getItem('nk_admin_token') || null;
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialization check
   checkAuth();
 
-  // Login Form Submission
-  const loginForm = document.getElementById('admin-login-form');
-  if (loginForm) {
-    loginForm.addEventListener('submit', handleAdminLogin);
-  }
+  // Login button
+  const loginBtn = document.getElementById('btn-admin-login');
+  if (loginBtn) loginBtn.addEventListener('click', handleAdminLogin);
 
-  // Logout Action
+  // Allow Enter key on password field
+  const passField = document.getElementById('admin-login-pass');
+  if (passField) passField.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleAdminLogin();
+  });
+
+  // Logout
   const logoutBtn = document.getElementById('admin-logout-btn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', handleAdminLogout);
-  }
+  if (logoutBtn) logoutBtn.addEventListener('click', handleAdminLogout);
 
-  // Filter Dropdowns and Search
+  // Filters
   const statusFilter = document.getElementById('admin-status-filter');
-  if (statusFilter) {
-    statusFilter.addEventListener('change', fetchDashboardData);
-  }
+  if (statusFilter) statusFilter.addEventListener('change', fetchDashboardData);
 
   const searchInput = document.getElementById('admin-search-input');
-  if (searchInput) {
-    searchInput.addEventListener('input', fetchDashboardData);
-  }
+  if (searchInput) searchInput.addEventListener('input', fetchDashboardData);
 
-  // Export Data Trigger
+  // Export
   const exportBtn = document.getElementById('admin-export-btn');
-  if (exportBtn) {
-    exportBtn.addEventListener('click', exportOrdersToCSV);
-  }
+  if (exportBtn) exportBtn.addEventListener('click', exportOrdersToCSV);
 });
 
-// Check if admin is authenticated
+// Show/hide password toggle
+function togglePassword() {
+  const passField = document.getElementById('admin-login-pass');
+  const icon = document.getElementById('toggle-pass-icon');
+  if (passField.type === 'password') {
+    passField.type = 'text';
+    icon.className = 'bi bi-eye-slash';
+  } else {
+    passField.type = 'password';
+    icon.className = 'bi bi-eye';
+  }
+}
+
+// Check auth state
 function checkAuth() {
   const loginSection = document.getElementById('admin-login-section');
   const dashboardSection = document.getElementById('admin-dashboard-section');
-
   if (!loginSection || !dashboardSection) return;
 
   if (token) {
@@ -54,57 +61,57 @@ function checkAuth() {
   }
 }
 
-// Handle login submission
-async function handleAdminLogin(e) {
-  e.preventDefault();
-  const usernameInput = document.getElementById('admin-username').value.trim();
-  const passwordInput = document.getElementById('admin-password').value.trim();
+// Handle Login ID + Password login
+async function handleAdminLogin() {
+  const loginId = document.getElementById('admin-login-id').value.trim();
+  const password = document.getElementById('admin-login-pass').value.trim();
   const loginMsg = document.getElementById('admin-login-msg');
 
-  if (!usernameInput || !passwordInput) {
-    loginMsg.innerHTML = `<div class="alert alert-danger py-2">Please enter both credentials.</div>`;
+  if (!loginId || !password) {
+    loginMsg.innerHTML = `<div class="alert alert-danger py-2 small">Please enter Login ID and Password.</div>`;
     return;
   }
 
-  loginMsg.innerHTML = `<div class="text-center py-2"><span class="spinner-border spinner-border-sm text-success"></span> Authenticating...</div>`;
+  const btn = document.getElementById('btn-admin-login');
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Logging in...`;
+  loginMsg.innerHTML = '';
 
   try {
-    const response = await fetch('/api/auth/login', {
+    const response = await fetch('/api/admin/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: usernameInput, password: passwordInput })
+      body: JSON.stringify({ loginId, password })
     });
 
     const result = await response.json();
-    if (!response.ok) {
-      throw new Error(result.message || 'Login failed.');
-    }
+    if (!response.ok) throw new Error(result.message || 'Login failed.');
 
     token = result.token;
     localStorage.setItem('nk_admin_token', token);
-    localStorage.setItem('nk_admin_user', result.username);
-
-    loginMsg.innerHTML = '';
-    
-    // Clear inputs
-    document.getElementById('admin-username').value = '';
-    document.getElementById('admin-password').value = '';
-
-    checkAuth();
+    loginMsg.innerHTML = `<div class="alert alert-success py-2 small"><i class="bi bi-check-circle me-1"></i>Login successful!</div>`;
+    setTimeout(() => checkAuth(), 600);
 
   } catch (error) {
-    console.error('Admin authentication failure:', error);
-    loginMsg.innerHTML = `<div class="alert alert-danger py-2">${error.message}</div>`;
+    loginMsg.innerHTML = `<div class="alert alert-danger py-2 small">${error.message}</div>`;
+    btn.disabled = false;
+    btn.innerHTML = `<i class="bi bi-box-arrow-in-right me-1"></i> Login`;
   }
 }
 
-// Handle logout action
+// Logout
 function handleAdminLogout() {
   token = null;
   localStorage.removeItem('nk_admin_token');
-  localStorage.removeItem('nk_admin_user');
+  const idField = document.getElementById('admin-login-id');
+  const passField = document.getElementById('admin-login-pass');
+  if (idField) idField.value = '';
+  if (passField) passField.value = '';
+  const btn = document.getElementById('btn-admin-login');
+  if (btn) { btn.disabled = false; btn.innerHTML = `<i class="bi bi-box-arrow-in-right me-1"></i> Login`; }
   checkAuth();
 }
+
 
 // Fetch stats and lists
 async function fetchDashboardData() {
