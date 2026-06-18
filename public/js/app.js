@@ -319,10 +319,21 @@ function renderCartDrawer() {
     `;
   });
 
+  const deliveryCharge = subtotal > 500 ? 0 : 30; // Free delivery over Rs.500
+  const grandTotal = subtotal + deliveryCharge;
+
   footerContainer.innerHTML = `
-    <div class="cart-summary-row total">
-      <span>Total</span>
+    <div class="cart-summary-row">
+      <span>Subtotal</span>
       <span>Rs. ${subtotal}</span>
+    </div>
+    <div class="cart-summary-row">
+      <span>Delivery Charges</span>
+      <span>${deliveryCharge === 0 ? '<span class="text-success">FREE</span>' : `Rs. ${deliveryCharge}`}</span>
+    </div>
+    <div class="cart-summary-row total">
+      <span>Grand Total</span>
+      <span>Rs. ${grandTotal}</span>
     </div>
     
     <div class="d-grid gap-2 mt-4">
@@ -433,7 +444,8 @@ async function handleCheckoutSubmit(e) {
   }
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const grandTotal = subtotal;
+  const deliveryCharge = subtotal > 500 ? 0 : 30;
+  const grandTotal = subtotal + deliveryCharge;
 
   const orderPayload = {
     customerName,
@@ -446,6 +458,7 @@ async function handleCheckoutSubmit(e) {
     specialInstructions,
     items: cart,
     subtotal,
+    deliveryCharge,
     grandTotal
   };
 
@@ -545,8 +558,16 @@ function renderInvoicePreview(order) {
       
       <div class="row justify-content-end">
         <div class="col-md-5 col-sm-8">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Subtotal:</span>
+            <span class="fw-semibold">Rs. ${order.subtotal}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Delivery Charges:</span>
+            <span>${order.deliveryCharge === 0 ? '<span class="text-success fw-bold">FREE</span>' : `Rs. ${order.deliveryCharge}`}</span>
+          </div>
           <div class="d-flex justify-content-between border-top pt-2">
-            <span class="fw-bold fs-5 text-success">Total:</span>
+            <span class="fw-bold fs-5 text-success">Grand Total:</span>
             <span class="fw-bold fs-5 text-success">Rs. ${order.grandTotal}</span>
           </div>
         </div>
@@ -588,7 +609,9 @@ ${order.landmark ? `Landmark: ${order.landmark}` : ''}
 
 ${productsStr}
 
-*Total:* Rs. ${order.grandTotal}
+*Subtotal:* Rs. ${order.subtotal}
+*Delivery Charges:* Rs. ${order.deliveryCharge}
+*Grand Total:* Rs. ${order.grandTotal}
 
 *Invoice Number:* ${order.invoiceNumber}
 *Order Date & Time:* ${new Date(order.createdAt).toLocaleString()}
