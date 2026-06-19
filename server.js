@@ -72,7 +72,7 @@ app.post('/api/auth/login', async (req, res) => {
 app.get('/api/products', async (req, res) => {
   try {
     const { category, search, sort } = req.query;
-    let query = {};
+    let query = { isDeleted: false };
 
     if (category && category !== 'All') {
       query.category = category;
@@ -168,7 +168,7 @@ app.post('/api/orders', async (req, res) => {
 app.get('/api/orders/track/:mobile', async (req, res) => {
   const { mobile } = req.params;
   try {
-    const ordersList = await Order.find({ mobileNumber: mobile });
+    const ordersList = await Order.find({ mobileNumber: mobile, isDeleted: false });
     // Sort descending by date
     ordersList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     res.json(ordersList);
@@ -205,7 +205,7 @@ app.post('/api/admin/login', (req, res) => {
 app.get('/api/admin/orders', authenticateToken, async (req, res) => {
   const { status, search } = req.query;
   try {
-    let query = {};
+    let query = { isDeleted: false };
     if (status && status !== 'All') {
       query.status = status;
     }
@@ -265,7 +265,7 @@ app.post('/api/reviews', async (req, res) => {
 
 app.get('/api/reviews', async (req, res) => {
   try {
-    const reviews = await Review.find({ status: 'Approved' });
+    const reviews = await Review.find({ status: 'Approved', isDeleted: false });
     reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     res.json(reviews.slice(0, 5)); // Return latest 5
   } catch (error) {
@@ -277,7 +277,7 @@ app.get('/api/reviews', async (req, res) => {
 // --- ADMIN REVIEWS ENDPOINTS ---
 app.get('/api/admin/reviews', authenticateToken, async (req, res) => {
   try {
-    const reviews = await Review.find({});
+    const reviews = await Review.find({ isDeleted: false });
     reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     res.json(reviews);
   } catch (error) {
@@ -305,8 +305,8 @@ app.put('/api/admin/reviews/:id/status', authenticateToken, async (req, res) => 
 app.delete('/api/admin/reviews/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
-    await Review.deleteMany({ _id: id });
-    res.json({ message: 'Review deleted.' });
+    await Review.findByIdAndUpdate(id, { isDeleted: true, deletedAt: new Date() });
+    res.json({ message: 'Review moved to Recycle Bin.' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete review.' });
   }
@@ -345,8 +345,8 @@ app.put('/api/admin/products/:id', authenticateToken, async (req, res) => {
 app.delete('/api/admin/products/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
-    await Product.deleteMany({ _id: id });
-    res.json({ message: 'Product deleted.' });
+    await Product.findByIdAndUpdate(id, { isDeleted: true, deletedAt: new Date() });
+    res.json({ message: 'Product moved to Recycle Bin.' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete product.' });
   }
@@ -394,7 +394,7 @@ app.put('/api/admin/theme', authenticateToken, async (req, res) => {
 // Dashboard Stats
 app.get('/api/admin/stats', authenticateToken, async (req, res) => {
   try {
-    const ordersList = await Order.find({});
+    const ordersList = await Order.find({ isDeleted: false });
     
     const totalOrders = ordersList.length;
     
@@ -413,7 +413,7 @@ app.get('/api/admin/stats', authenticateToken, async (req, res) => {
     const deliveredCount = ordersList.filter(o => o.status === 'Delivered').length;
     const cancelledCount = ordersList.filter(o => o.status === 'Cancelled').length;
 
-    const productsList = await Product.find({});
+    const productsList = await Product.find({ isDeleted: false });
     const totalProducts = productsList.length;
     
     // Unique customers based on mobile numbers
@@ -437,6 +437,90 @@ app.get('/api/admin/stats', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Error generating dashboard stats:', error);
     res.status(500).json({ message: 'Failed to generate statistics.' });
+  }
+});
+
+// Delete Order (Soft Delete)
+app.delete('/api/admin/orders/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Order.findByIdAndUpdate(id, { isDeleted: true, deletedAt: new Date() });
+    res.json({ message: 'Order moved to Recycle Bin.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete order.' });
+  }
+});
+
+// --- RECYCLE BIN & BACKUP ENDPOINTS ---
+
+app.get('/api/admin/recycle-bin/:type', authenticateToken, async (req, res) => {
+  const { type } = req.params;
+  try {
+    let items = [];
+    if (type === 'products') items = await Product.find({ isDeleted: true });
+    else if (type === 'orders') items = await Order.find({ isDeleted: true });
+    else if (type === 'reviews') items = await Review.find({ isDeleted: true });
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch recycle bin.' });
+  }
+});
+
+app.put('/api/admin/recycle-bin/restore/:type/:id', authenticateToken, async (req, res) => {
+  const { type, id } = req.params;
+  try {
+    let updated;
+    if (type === 'products') updated = await Product.findByIdAndUpdate(id, { isDeleted: false, deletedAt: null }, { new: true });
+    else if (type === 'orders') updated = await Order.findByIdAndUpdate(id, { isDeleted: false, deletedAt: null }, { new: true });
+    else if (type === 'reviews') updated = await Review.findByIdAndUpdate(id, { isDeleted: false, deletedAt: null }, { new: true });
+    
+    if (!updated) return res.status(404).json({ message: 'Item not found.' });
+    res.json({ message: 'Item restored successfully.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to restore item.' });
+  }
+});
+
+app.delete('/api/admin/recycle-bin/permanent/:type/:id', authenticateToken, async (req, res) => {
+  const { type, id } = req.params;
+  try {
+    if (type === 'products') await Product.deleteMany({ _id: id });
+    else if (type === 'orders') await Order.deleteMany({ _id: id });
+    else if (type === 'reviews') await Review.deleteMany({ _id: id });
+    res.json({ message: 'Item permanently deleted.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to permanently delete item.' });
+  }
+});
+
+app.post('/api/admin/backup', authenticateToken, async (req, res) => {
+  try {
+    const backupDir = path.join(__dirname, 'data', 'backups');
+    if (!fs.existsSync(backupDir)) {
+      fs.mkdirSync(backupDir, { recursive: true });
+    }
+    
+    const products = await Product.find({});
+    const orders = await Order.find({});
+    const reviews = await Review.find({});
+    const theme = await Theme.find({});
+    
+    const backupData = {
+      timestamp: new Date().toISOString(),
+      products,
+      orders,
+      reviews,
+      theme
+    };
+    
+    const filename = `backup-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+    const filepath = path.join(backupDir, filename);
+    fs.writeFileSync(filepath, JSON.stringify(backupData, null, 2));
+    
+    res.json({ message: 'Backup created successfully', filename });
+  } catch (error) {
+    console.error('Backup error:', error);
+    res.status(500).json({ message: 'Failed to create backup.' });
   }
 });
 

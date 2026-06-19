@@ -83,6 +83,8 @@
             <button class="nav-link text-start text-white mb-2" id="v-pills-orders-tab" data-bs-toggle="pill" data-bs-target="#v-pills-orders" type="button" role="tab"><i class="bi bi-receipt me-2"></i> Orders</button>
             <button class="nav-link text-start text-white mb-2" id="v-pills-products-tab" data-bs-toggle="pill" data-bs-target="#v-pills-products" type="button" role="tab"><i class="bi bi-box-seam me-2"></i> Products</button>
             <button class="nav-link text-start text-white mb-2" id="v-pills-reviews-tab" data-bs-toggle="pill" data-bs-target="#v-pills-reviews" type="button" role="tab"><i class="bi bi-star me-2"></i> Reviews</button>
+            <button class="nav-link text-start text-white mb-2" id="v-pills-recycle-tab" data-bs-toggle="pill" data-bs-target="#v-pills-recycle" type="button" role="tab"><i class="bi bi-trash me-2"></i> Recycle Bin</button>
+            <button class="nav-link text-start text-white mb-2" id="v-pills-backup-tab" data-bs-toggle="pill" data-bs-target="#v-pills-backup" type="button" role="tab"><i class="bi bi-cloud-arrow-down me-2"></i> Backups</button>
             <button class="nav-link text-start text-white mb-2" id="v-pills-theme-tab" data-bs-toggle="pill" data-bs-target="#v-pills-theme" type="button" role="tab"><i class="bi bi-palette me-2"></i> Theme Settings</button>
           </div>
         </div>
@@ -256,6 +258,44 @@
                     <tbody id="admin-reviews-table-body"></tbody>
                   </table>
                 </div>
+              </div>
+            </div>
+
+            <!-- RECYCLE BIN TAB -->
+            <div class="tab-pane fade" id="v-pills-recycle" role="tabpanel">
+              <div class="card shadow-sm border-0 rounded-4 bg-body overflow-hidden">
+                <div class="card-header bg-danger text-white py-3 d-flex justify-content-between align-items-center">
+                  <h5 class="mb-0 fw-bold"><i class="bi bi-trash me-2"></i>Recycle Bin (Soft Deleted Items)</h5>
+                  <select class="form-select form-select-sm w-auto d-inline-block" id="recycle-type-filter">
+                    <option value="products">Products</option>
+                    <option value="orders">Orders</option>
+                    <option value="reviews">Reviews</option>
+                  </select>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Item Details</th>
+                        <th>Deleted Date</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="admin-recycle-table-body"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- BACKUP TAB -->
+            <div class="tab-pane fade" id="v-pills-backup" role="tabpanel">
+              <div class="card shadow-sm border-0 rounded-4 bg-body p-4 text-center">
+                <h5 class="fw-bold mb-3 text-success"><i class="bi bi-server me-2"></i>Database Backups</h5>
+                <p class="text-muted mb-4">Export all database records to a JSON file before making any system updates.</p>
+                <button class="btn btn-primary-custom btn-lg" id="btn-trigger-backup">
+                  <i class="bi bi-cloud-arrow-down me-2"></i> Download Database Backup
+                </button>
+                <div id="backup-message" class="mt-3"></div>
               </div>
             </div>
 

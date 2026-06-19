@@ -46,6 +46,10 @@ class JSONModel {
           const regex = new RegExp(query[key].$regex, 'i');
           if (!regex.test(item[key])) return false;
         } else if (item[key] !== query[key]) {
+          // Handle missing boolean values correctly
+          if (query[key] === false && !item[key]) {
+            continue;
+          }
           return false;
         }
       }
@@ -138,7 +142,9 @@ const ProductSchema = new mongoose.Schema({
   offer: { type: String, default: '' },
   stockQuantity: { type: Number, default: 0 },
   stockStatus: { type: String, default: 'In Stock' }, // In Stock, Low Stock, Out of Stock
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  isDeleted: { type: Boolean, default: false },
+  deletedAt: { type: Date, default: null }
 });
 
 const OrderSchema = new mongoose.Schema({
@@ -165,13 +171,17 @@ const OrderSchema = new mongoose.Schema({
   deliveryCharge: { type: Number, required: true },
   grandTotal: { type: Number, required: true },
   status: { type: String, default: 'Pending' }, // Pending, Confirmed, Packed, Out For Delivery, Delivered
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  isDeleted: { type: Boolean, default: false },
+  deletedAt: { type: Date, default: null }
 });
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  isDeleted: { type: Boolean, default: false },
+  deletedAt: { type: Date, default: null }
 });
 
 const ReviewSchema = new mongoose.Schema({
@@ -179,7 +189,9 @@ const ReviewSchema = new mongoose.Schema({
   rating: { type: Number, required: true },
   message: { type: String, required: true },
   status: { type: String, default: 'Pending' }, // Pending, Approved, Hidden
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  isDeleted: { type: Boolean, default: false },
+  deletedAt: { type: Date, default: null }
 });
 
 const ThemeSchema = new mongoose.Schema({

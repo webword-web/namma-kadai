@@ -12,19 +12,24 @@ const seedData = async () => {
   console.log('Seeding database...');
 
   // 1. Seed Admin User
-  console.log('Clearing old users...');
-  await User.deleteMany({});
+  // console.log('Clearing old users...');
+  // await User.deleteMany({});
   
   const hashedPassword = await bcrypt.hash('admin123', 10);
-  await User.create({
-    username: 'admin',
-    password: hashedPassword
-  });
-  console.log('Admin user created successfully! Username: admin, Password: admin123');
+  
+  // Only create admin if it doesn't exist
+  const existingAdmin = await User.findOne({ username: 'admin' });
+  if (!existingAdmin) {
+    await User.create({
+      username: 'admin',
+      password: hashedPassword
+    });
+    console.log('Admin user created successfully! Username: admin, Password: admin123');
+  }
 
   // 2. Seed Products
-  console.log('Clearing old products...');
-  await Product.deleteMany({});
+  // console.log('Clearing old products...');
+  // await Product.deleteMany({});
 
   const products = [
     // Vegetables

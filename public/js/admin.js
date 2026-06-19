@@ -84,6 +84,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const previewThemeBtn = document.getElementById('btn-theme-preview');
   if (previewThemeBtn) previewThemeBtn.addEventListener('click', previewThemeSettings);
+
+  // Recycle Bin & Backup
+  const recycleFilter = document.getElementById('recycle-type-filter');
+  if (recycleFilter) recycleFilter.addEventListener('change', fetchRecycleBin);
+
+  const backupBtn = document.getElementById('btn-trigger-backup');
+  if (backupBtn) backupBtn.addEventListener('click', triggerBackup);
 });
 
 // Show/hide password toggle
@@ -221,6 +228,9 @@ async function fetchDashboardData() {
     const themeData = await themeResponse.json();
     if (themeData) renderThemeSettings(themeData);
 
+    // 6. Fetch Recycle Bin
+    fetchRecycleBin();
+
   } catch (error) {
     console.error('Error fetching dashboard content:', error);
   }
@@ -303,6 +313,7 @@ function renderOrdersList(ordersList) {
           <div class="d-flex gap-1">
             <button class="btn btn-sm btn-outline-success" onclick="viewOrderDetails('${ord._id}')" title="View details"><i class="bi bi-eye"></i></button>
             <a href="/api/orders/${ord._id}/invoice-pdf" target="_blank" class="btn btn-sm btn-outline-secondary" title="Invoice PDF"><i class="bi bi-file-earmark-pdf"></i></a>
+            <button class="btn btn-sm btn-outline-danger" onclick="deleteOrder('${ord._id}')" title="Delete Order"><i class="bi bi-trash"></i></button>
           </div>
         </td>
       </tr>
@@ -333,6 +344,23 @@ async function updateOrderStatus(orderId, newStatus) {
   } catch (error) {
     console.error('Error modifying order status:', error);
     alert(error.message);
+  }
+}
+
+async function deleteOrder(id) {
+  if (!confirm('Are you sure you want to delete this order? It will be moved to the Recycle Bin.')) return;
+  try {
+    const res = await fetch(`/api/admin/orders/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      fetchDashboardData();
+    } else {
+      alert('Failed to delete order.');
+    }
+  } catch (error) {
+    alert('Error deleting order.');
   }
 }
 
@@ -699,4 +727,112 @@ function resetThemeToDefault() {
   document.getElementById('theme-bg').value = '#f8f9fa';
   document.getElementById('theme-text').value = '#333333';
   document.getElementById('theme-button').value = '#2e7d32';
+}
+
+// --- RECYCLE BIN ---
+
+async function fetchRecycleBin() {
+  const type = document.getElementById('recycle-type-filter').value || 'products';
+  try {
+    const res = await fetch(`/api/admin/recycle-bin/${type}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const items = await res.json();
+    renderRecycleBin(items, type);
+  } catch (error) {
+    console.error('Error fetching recycle bin:', error);
+  }
+}
+
+function renderRecycleBin(items, type) {
+  const tableBody = document.getElementById('admin-recycle-table-body');
+  if (!tableBody) return;
+
+  if (items.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="3" class="text-center py-4 text-muted">Recycle bin is empty for ${type}.</td></tr>`;
+    return;
+  }
+
+  tableBody.innerHTML = items.map(item => {
+    let title = '';
+    if (type === 'products') title = item.name;
+    else if (type === 'orders') title = `Invoice: ${item.invoiceNumber} - ${item.customerName}`;
+    else if (type === 'reviews') title = `Review by ${item.customerName}`;
+
+    return `
+      <tr>
+        <td class="fw-bold">${title}</td>
+        <td>${new Date(item.deletedAt || new Date()).toLocaleString()}</td>
+        <td>
+          <div class="d-flex gap-1">
+            <button class="btn btn-sm btn-outline-success" onclick="restoreRecycleItem('${type}', '${item._id}')" title="Restore"><i class="bi bi-arrow-counterclockwise"></i> Restore</button>
+            <button class="btn btn-sm btn-outline-danger" onclick="permanentDeleteRecycleItem('${type}', '${item._id}')" title="Delete Permanently"><i class="bi bi-x-circle"></i> Permanent Delete</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function restoreRecycleItem(type, id) {
+  try {
+    const res = await fetch(`/api/admin/recycle-bin/restore/${type}/${id}`, {
+      method: 'PUT',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      fetchDashboardData(); // Refreshes everything including recycle bin
+    } else {
+      alert('Failed to restore item.');
+    }
+  } catch (error) {
+    alert('Error restoring item.');
+  }
+}
+
+async function permanentDeleteRecycleItem(type, id) {
+  if (!confirm('WARNING: This will permanently delete the item and it cannot be recovered. Are you sure?')) return;
+  try {
+    const res = await fetch(`/api/admin/recycle-bin/permanent/${type}/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      fetchDashboardData();
+    } else {
+      alert('Failed to permanently delete item.');
+    }
+  } catch (error) {
+    alert('Error permanently deleting item.');
+  }
+}
+
+// --- DATABASE BACKUPS ---
+
+async function triggerBackup() {
+  const backupBtn = document.getElementById('btn-trigger-backup');
+  const msgDiv = document.getElementById('backup-message');
+  
+  backupBtn.disabled = true;
+  backupBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Generating Backup...`;
+  msgDiv.innerHTML = '';
+  
+  try {
+    const res = await fetch('/api/admin/backup', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (res.ok) {
+      const data = await res.json();
+      msgDiv.innerHTML = `<div class="alert alert-success mt-3 py-2"><i class="bi bi-check-circle me-1"></i> Backup created successfully: <strong>${data.filename}</strong></div>`;
+    } else {
+      msgDiv.innerHTML = `<div class="alert alert-danger mt-3 py-2"><i class="bi bi-x-circle me-1"></i> Failed to create backup.</div>`;
+    }
+  } catch (error) {
+    msgDiv.innerHTML = `<div class="alert alert-danger mt-3 py-2"><i class="bi bi-x-circle me-1"></i> Error creating backup.</div>`;
+  } finally {
+    backupBtn.disabled = false;
+    backupBtn.innerHTML = `<i class="bi bi-cloud-arrow-down me-2"></i> Download Database Backup`;
+  }
 }
