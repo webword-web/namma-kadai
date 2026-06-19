@@ -366,7 +366,7 @@ function renderCartDrawer() {
     `;
   });
 
-  const deliveryCharge = subtotal > 500 ? 0 : 30; // Free delivery over Rs.500
+  const deliveryCharge = 0; // Free delivery for all orders
   const grandTotal = subtotal + deliveryCharge;
 
   footerContainer.innerHTML = `
@@ -491,7 +491,7 @@ async function handleCheckoutSubmit(e) {
   }
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const deliveryCharge = subtotal > 500 ? 0 : 30;
+  const deliveryCharge = 0; // Free delivery for all orders
   const grandTotal = subtotal + deliveryCharge;
 
   const orderPayload = {
