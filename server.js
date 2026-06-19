@@ -524,6 +524,63 @@ app.post('/api/admin/backup', authenticateToken, async (req, res) => {
   }
 });
 
+// List available backups
+app.get('/api/admin/backups', authenticateToken, async (req, res) => {
+  try {
+    const backupDir = path.join(__dirname, 'data', 'backups');
+    if (!fs.existsSync(backupDir)) return res.json([]);
+    const files = fs.readdirSync(backupDir)
+      .filter(f => f.endsWith('.json'))
+      .map(f => ({ filename: f, createdAt: fs.statSync(path.join(backupDir, f)).birthtime }));
+    // Sort newest first
+    files.sort((a, b) => b.createdAt - a.createdAt);
+    res.json(files);
+  } catch (error) {
+    console.error('Error listing backups:', error);
+    res.status(500).json({ message: 'Failed to list backups.' });
+  }
+});
+
+// Download a backup file
+app.get('/api/admin/backups/download/:filename', authenticateToken, async (req, res) => {
+  try {
+    const { filename } = req.params;
+    const backupPath = path.join(__dirname, 'data', 'backups', filename);
+    if (!fs.existsSync(backupPath)) return res.status(404).json({ message: 'Backup not found.' });
+    res.download(backupPath);
+  } catch (error) {
+    console.error('Error downloading backup:', error);
+    res.status(500).json({ message: 'Failed to download backup.' });
+  }
+});
+
+// Restore from a backup (replace collections)
+app.post('/api/admin/backups/restore', authenticateToken, async (req, res) => {
+  try {
+    const { filename } = req.body;
+    const backupPath = path.join(__dirname, 'data', 'backups', filename);
+    if (!fs.existsSync(backupPath)) return res.status(404).json({ message: 'Backup file not found.' });
+    const data = JSON.parse(fs.readFileSync(backupPath, 'utf-8'));
+    // Replace collections safely
+    await Promise.all([
+      Product.deleteMany({}),
+      Order.deleteMany({}),
+      Review.deleteMany({}),
+      Theme.deleteMany({})
+    ]);
+    await Promise.all([
+      Product.insertMany(data.products || []),
+      Order.insertMany(data.orders || []),
+      Review.insertMany(data.reviews || []),
+      Theme.insertMany(data.theme || [])
+    ]);
+    res.json({ message: 'Database restored from backup successfully.' });
+  } catch (error) {
+    console.error('Backup restore error:', error);
+    res.status(500).json({ message: 'Failed to restore backup.' });
+  }
+});
+
 // Download Invoice PDF
 app.get('/api/orders/:id/invoice-pdf', async (req, res) => {
   const { id } = req.params;
