@@ -48,8 +48,29 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.onload = function(evt) {
           document.getElementById('prod-image-base64').value = evt.target.result;
           document.getElementById('prod-image-preview').innerHTML = `<img src="${evt.target.result}" style="height: 100px; border-radius: 8px;">`;
+          const urlInput = document.getElementById('prod-image-url');
+          if (urlInput) urlInput.value = '';
         };
         reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  const prodImageUrlInput = document.getElementById('prod-image-url');
+  if (prodImageUrlInput) {
+    prodImageUrlInput.addEventListener('input', function(e) {
+      const url = e.target.value.trim();
+      if (url) {
+        document.getElementById('prod-image-base64').value = url;
+        document.getElementById('prod-image-preview').innerHTML = `<img src="${url}" style="height: 100px; border-radius: 8px;" onerror="this.src='https://via.placeholder.com/100?text=Invalid+Image'">`;
+        const fileInput = document.getElementById('prod-image');
+        if (fileInput) fileInput.value = '';
+      } else {
+        const fileInput = document.getElementById('prod-image');
+        if (!fileInput || !fileInput.files.length) {
+          document.getElementById('prod-image-base64').value = '';
+          document.getElementById('prod-image-preview').innerHTML = '';
+        }
       }
     });
   }
@@ -469,6 +490,14 @@ function editProduct(id) {
   document.getElementById('prod-stock').value = p.stockQuantity;
   document.getElementById('prod-featured').checked = p.featured;
   document.getElementById('prod-image-base64').value = p.image;
+  
+  if (p.image && p.image.startsWith('http')) {
+    document.getElementById('prod-image-url').value = p.image;
+  } else {
+    document.getElementById('prod-image-url').value = '';
+  }
+  document.getElementById('prod-image').value = '';
+
   document.getElementById('prod-image-preview').innerHTML = `<img src="${p.image}" style="height: 100px; border-radius: 8px;">`;
   document.getElementById('productModalLabel').textContent = 'Edit Product';
   
@@ -490,7 +519,7 @@ async function handleProductSubmit(e) {
   };
 
   if (!payload.image) {
-    alert('Please upload an image.');
+    alert('Please upload an image or provide an image URL.');
     return;
   }
 
