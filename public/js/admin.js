@@ -30,6 +30,39 @@ document.addEventListener('DOMContentLoaded', () => {
   // Export
   const exportBtn = document.getElementById('admin-export-btn');
   if (exportBtn) exportBtn.addEventListener('click', exportOrdersToCSV);
+
+  // Refresh
+  const refreshBtn = document.getElementById('btn-refresh-admin');
+  if (refreshBtn) refreshBtn.addEventListener('click', fetchDashboardData);
+
+  // Product Form
+  const productForm = document.getElementById('product-form');
+  if (productForm) productForm.addEventListener('submit', handleProductSubmit);
+
+  const prodImageInput = document.getElementById('prod-image');
+  if (prodImageInput) {
+    prodImageInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          document.getElementById('prod-image-base64').value = evt.target.result;
+          document.getElementById('prod-image-preview').innerHTML = `<img src="${evt.target.result}" style="height: 100px; border-radius: 8px;">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  // Theme Form
+  const themeForm = document.getElementById('theme-settings-form');
+  if (themeForm) themeForm.addEventListener('submit', handleThemeSubmit);
+
+  const resetThemeBtn = document.getElementById('btn-theme-reset');
+  if (resetThemeBtn) resetThemeBtn.addEventListener('click', resetThemeToDefault);
+
+  const previewThemeBtn = document.getElementById('btn-theme-preview');
+  if (previewThemeBtn) previewThemeBtn.addEventListener('click', previewThemeSettings);
 });
 
 // Show/hide password toggle
@@ -148,6 +181,25 @@ async function fetchDashboardData() {
     orders = await ordersResponse.json();
     renderOrdersList(orders);
 
+    // 3. Fetch Products
+    const productsResponse = await fetch('/api/admin/products', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const products = await productsResponse.json();
+    renderProductsList(products);
+
+    // 4. Fetch Reviews
+    const reviewsResponse = await fetch('/api/admin/reviews', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const reviews = await reviewsResponse.json();
+    renderReviewsList(reviews);
+
+    // 5. Fetch Theme Settings
+    const themeResponse = await fetch('/api/theme');
+    const themeData = await themeResponse.json();
+    if (themeData) renderThemeSettings(themeData);
+
   } catch (error) {
     console.error('Error fetching dashboard content:', error);
   }
@@ -157,12 +209,20 @@ async function fetchDashboardData() {
 function renderStats(stats) {
   document.getElementById('stat-total-orders').textContent = stats.totalOrders;
   document.getElementById('stat-revenue').textContent = `Rs. ${stats.revenue.toLocaleString()}`;
-  document.getElementById('stat-today-orders').textContent = stats.todayOrders;
+  document.getElementById('stat-customers').textContent = stats.totalCustomers || 0;
+  document.getElementById('stat-products').textContent = stats.totalProducts || 0;
   
   const counts = stats.statusCounts;
-  document.getElementById('stat-pending').textContent = counts.Pending;
-  document.getElementById('stat-completed').textContent = counts.Delivered;
-  document.getElementById('stat-cancelled').textContent = counts.Cancelled;
+  // If stat boxes exist, update them
+  if (document.getElementById('stat-today-orders')) {
+    document.getElementById('stat-today-orders').textContent = stats.todayOrders;
+  }
+  if (document.getElementById('stat-pending')) {
+    document.getElementById('stat-pending').textContent = counts.Pending;
+  }
+  if (document.getElementById('stat-completed')) {
+    document.getElementById('stat-completed').textContent = counts.Delivered;
+  }
 }
 
 // Render list of orders in table
@@ -348,4 +408,266 @@ function exportOrdersToCSV() {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+}
+
+// --- PRODUCTS MANAGEMENT ---
+
+let currentProducts = [];
+
+function renderProductsList(products) {
+  currentProducts = products;
+  const tableBody = document.getElementById('admin-products-table-body');
+  if (!tableBody) return;
+
+  if (products.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">No products found.</td></tr>`;
+    return;
+  }
+
+  tableBody.innerHTML = products.map(p => {
+    const isOutOfStock = p.stockStatus === 'Out of Stock';
+    return `
+      <tr>
+        <td><img src="${p.image}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;"></td>
+        <td>
+          <div class="fw-bold">${p.name}</div>
+          ${p.featured ? '<span class="badge bg-warning text-dark border border-warning" style="font-size:0.6rem;">Featured</span>' : ''}
+        </td>
+        <td>${p.category}</td>
+        <td>Rs. ${p.price} <small class="text-muted">/ ${p.unit}</small></td>
+        <td><strong>${p.stockQuantity}</strong></td>
+        <td>
+          <span class="badge ${isOutOfStock ? 'bg-danger' : 'bg-success'}">${p.stockStatus}</span>
+        </td>
+        <td>
+          <div class="d-flex gap-1">
+            <button class="btn btn-sm btn-outline-primary" onclick="editProduct('${p._id}')"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct('${p._id}')"><i class="bi bi-trash"></i></button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function openProductModal() {
+  document.getElementById('product-form').reset();
+  document.getElementById('prod-id').value = '';
+  document.getElementById('prod-image-base64').value = '';
+  document.getElementById('prod-image-preview').innerHTML = '';
+  document.getElementById('productModalLabel').textContent = 'Add New Product';
+}
+
+function editProduct(id) {
+  const p = currentProducts.find(x => x._id === id);
+  if (!p) return;
+  document.getElementById('prod-id').value = p._id;
+  document.getElementById('prod-name').value = p.name;
+  document.getElementById('prod-category').value = p.category;
+  document.getElementById('prod-price').value = p.price;
+  document.getElementById('prod-unit').value = p.unit;
+  document.getElementById('prod-stock').value = p.stockQuantity;
+  document.getElementById('prod-featured').checked = p.featured;
+  document.getElementById('prod-image-base64').value = p.image;
+  document.getElementById('prod-image-preview').innerHTML = `<img src="${p.image}" style="height: 100px; border-radius: 8px;">`;
+  document.getElementById('productModalLabel').textContent = 'Edit Product';
+  
+  new bootstrap.Modal(document.getElementById('productModal')).show();
+}
+
+async function handleProductSubmit(e) {
+  e.preventDefault();
+  
+  const id = document.getElementById('prod-id').value;
+  const payload = {
+    name: document.getElementById('prod-name').value,
+    category: document.getElementById('prod-category').value,
+    price: document.getElementById('prod-price').value,
+    unit: document.getElementById('prod-unit').value,
+    stockQuantity: document.getElementById('prod-stock').value,
+    featured: document.getElementById('prod-featured').checked,
+    image: document.getElementById('prod-image-base64').value
+  };
+
+  if (!payload.image) {
+    alert('Please upload an image.');
+    return;
+  }
+
+  const method = id ? 'PUT' : 'POST';
+  const url = id ? `/api/admin/products/${id}` : `/api/admin/products`;
+
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
+      fetchDashboardData();
+    } else {
+      const data = await res.json();
+      alert('Failed: ' + data.message);
+    }
+  } catch (error) {
+    alert('Error saving product.');
+  }
+}
+
+async function deleteProduct(id) {
+  if (!confirm('Are you sure you want to delete this product?')) return;
+  
+  try {
+    const res = await fetch(`/api/admin/products/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      fetchDashboardData();
+    } else {
+      alert('Failed to delete.');
+    }
+  } catch (error) {
+    alert('Error deleting product.');
+  }
+}
+
+// --- REVIEWS MANAGEMENT ---
+
+function renderReviewsList(reviews) {
+  const tableBody = document.getElementById('admin-reviews-table-body');
+  if (!tableBody) return;
+
+  if (reviews.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">No reviews found.</td></tr>`;
+    return;
+  }
+
+  tableBody.innerHTML = reviews.map(r => {
+    const starsHtml = Array(r.rating).fill('<i class="bi bi-star-fill text-warning"></i>').join('') + 
+                      Array(5 - r.rating).fill('<i class="bi bi-star text-warning"></i>').join('');
+    
+    let statusBadge = '';
+    if (r.status === 'pending') statusBadge = '<span class="badge bg-warning text-dark">Pending</span>';
+    else if (r.status === 'approved') statusBadge = '<span class="badge bg-success">Approved</span>';
+    else if (r.status === 'hidden') statusBadge = '<span class="badge bg-secondary">Hidden</span>';
+
+    return `
+      <tr>
+        <td class="fw-bold">${r.customerName}</td>
+        <td>${starsHtml}</td>
+        <td><div style="max-width:250px;" class="text-truncate" title="${r.message}">${r.message}</div></td>
+        <td>${new Date(r.createdAt).toLocaleDateString()}</td>
+        <td>${statusBadge}</td>
+        <td>
+          <div class="d-flex gap-1">
+            ${r.status !== 'approved' ? `<button class="btn btn-sm btn-outline-success" onclick="updateReviewStatus('${r._id}', 'approved')" title="Approve"><i class="bi bi-check-lg"></i></button>` : ''}
+            ${r.status !== 'hidden' ? `<button class="btn btn-sm btn-outline-secondary" onclick="updateReviewStatus('${r._id}', 'hidden')" title="Hide"><i class="bi bi-eye-slash"></i></button>` : ''}
+            <button class="btn btn-sm btn-outline-danger" onclick="deleteReview('${r._id}')" title="Delete"><i class="bi bi-trash"></i></button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function updateReviewStatus(id, status) {
+  try {
+    const res = await fetch(`/api/admin/reviews/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ status })
+    });
+    if (res.ok) fetchDashboardData();
+  } catch (error) {
+    alert('Error updating review.');
+  }
+}
+
+async function deleteReview(id) {
+  if (!confirm('Are you sure you want to delete this review?')) return;
+  try {
+    const res = await fetch(`/api/admin/reviews/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) fetchDashboardData();
+  } catch (error) {
+    alert('Error deleting review.');
+  }
+}
+
+// --- THEME SETTINGS MANAGEMENT ---
+
+function renderThemeSettings(theme) {
+  if (theme.primaryColor) document.getElementById('theme-primary').value = theme.primaryColor;
+  if (theme.secondaryColor) document.getElementById('theme-secondary').value = theme.secondaryColor;
+  if (theme.headerBg) document.getElementById('theme-header').value = theme.headerBg;
+  if (theme.footerBg) document.getElementById('theme-footer').value = theme.footerBg;
+  if (theme.pageBg) document.getElementById('theme-bg').value = theme.pageBg;
+  if (theme.textColor) document.getElementById('theme-text').value = theme.textColor;
+  if (theme.buttonColor) document.getElementById('theme-button').value = theme.buttonColor;
+}
+
+async function handleThemeSubmit(e) {
+  e.preventDefault();
+  
+  const payload = {
+    primaryColor: document.getElementById('theme-primary').value,
+    secondaryColor: document.getElementById('theme-secondary').value,
+    headerBg: document.getElementById('theme-header').value,
+    footerBg: document.getElementById('theme-footer').value,
+    pageBg: document.getElementById('theme-bg').value,
+    textColor: document.getElementById('theme-text').value,
+    buttonColor: document.getElementById('theme-button').value
+  };
+
+  try {
+    const btn = document.getElementById('btn-theme-save');
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    const res = await fetch('/api/admin/theme', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      alert('Theme updated successfully! The store frontend will reflect these changes.');
+    } else {
+      alert('Failed to update theme.');
+    }
+  } catch (error) {
+    alert('Error updating theme.');
+  } finally {
+    const btn = document.getElementById('btn-theme-save');
+    btn.disabled = false;
+    btn.textContent = 'Save Theme Globally';
+  }
+}
+
+function previewThemeSettings() {
+  alert('In a real scenario, this would apply CSS variables instantly for preview. For now, click Save to persist.');
+}
+
+function resetThemeToDefault() {
+  document.getElementById('theme-primary').value = '#2e7d32';
+  document.getElementById('theme-secondary').value = '#4caf50';
+  document.getElementById('theme-header').value = '#ffffff';
+  document.getElementById('theme-footer').value = '#212529';
+  document.getElementById('theme-bg').value = '#f8f9fa';
+  document.getElementById('theme-text').value = '#333333';
+  document.getElementById('theme-button').value = '#2e7d32';
 }

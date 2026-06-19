@@ -19,9 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initializations
   fetchProducts();
+  fetchReviews();
   updateCartBadge();
   updateWishlistBadge();
   renderCartDrawer();
+  initLanguage();
 
   // Scroll to Top Logic
   const backToTopBtn = document.getElementById('back-to-top');
@@ -67,16 +69,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Cart Drawer Opens/Closes
   const cartBtn = document.getElementById('cart-btn');
+  const floatingCartBtn = document.getElementById('floating-basket-btn');
   const cartCloseBtn = document.getElementById('cart-close');
   const cartOverlay = document.getElementById('cart-overlay');
   const cartDrawer = document.getElementById('cart-drawer');
 
-  if (cartBtn) {
-    cartBtn.addEventListener('click', () => {
-      cartOverlay.classList.add('active');
-      cartDrawer.classList.add('active');
-    });
-  }
+  const openCart = () => {
+    cartOverlay.classList.add('active');
+    cartDrawer.classList.add('active');
+  };
+
+  if (cartBtn) cartBtn.addEventListener('click', openCart);
+  if (floatingCartBtn) floatingCartBtn.addEventListener('click', openCart);
 
   const closeCart = () => {
     cartOverlay.classList.remove('active');
@@ -97,7 +101,43 @@ document.addEventListener('DOMContentLoaded', () => {
   if (trackBtn) {
     trackBtn.addEventListener('click', handleOrderTracking);
   }
+
+  // Review Form Submission
+  const reviewForm = document.getElementById('review-form');
+  if (reviewForm) {
+    reviewForm.addEventListener('submit', handleReviewSubmit);
+  }
+
+  // Language Switcher Event Listeners
+  document.querySelectorAll('.lang-option').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const lang = e.target.getAttribute('data-lang');
+      setLanguage(lang);
+    });
+  });
 });
+
+// --- I18N / TRANSLATIONS ---
+function initLanguage() {
+  const currentLang = localStorage.getItem('nk_lang') || 'en';
+  setLanguage(currentLang);
+}
+
+function setLanguage(lang) {
+  localStorage.setItem('nk_lang', lang);
+  document.getElementById('langSwitcher').textContent = lang.toUpperCase();
+  
+  if (typeof translations !== 'undefined' && translations[lang]) {
+    const texts = translations[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (texts[key]) {
+        el.textContent = texts[key];
+      }
+    });
+  }
+}
 
 // --- API ACTIONS ---
 
@@ -267,10 +307,17 @@ function removeCartItem(productId) {
 
 function updateCartBadge() {
   const badge = document.getElementById('cart-badge-count');
-  if (!badge) return;
+  const floatBadge = document.getElementById('floating-cart-badge');
   const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-  badge.textContent = count;
-  badge.style.display = count > 0 ? 'block' : 'none';
+  
+  if (badge) {
+    badge.textContent = count;
+    badge.style.display = count > 0 ? 'block' : 'none';
+  }
+  if (floatBadge) {
+    floatBadge.textContent = count;
+    floatBadge.style.display = count > 0 ? 'inline-block' : 'none';
+  }
 }
 
 function renderCartDrawer() {
@@ -786,3 +833,88 @@ async function handleOrderTracking() {
     `;
   }
 }
+
+// --- REVIEWS LOGIC ---
+
+async function fetchReviews() {
+  const container = document.getElementById('reviews-container');
+  const allContainer = document.getElementById('all-reviews-container');
+  if (!container) return;
+
+  try {
+    const response = await fetch('/api/reviews');
+    const reviews = await response.json();
+
+    if (reviews.length === 0) {
+      container.innerHTML = '<p class="text-center text-muted col-12">No reviews yet. Be the first to leave one!</p>';
+      if (allContainer) allContainer.innerHTML = container.innerHTML;
+      return;
+    }
+
+    const generateReviewCard = (rev) => `
+      <div class="col-md-4">
+        <div class="review-card">
+          <div class="stars-container text-warning">
+            ${Array(rev.rating).fill('<i class="bi bi-star-fill"></i>').join('')}
+            ${Array(5 - rev.rating).fill('<i class="bi bi-star"></i>').join('')}
+          </div>
+          <p class="text-muted italic mb-4">"${rev.message}"</p>
+          <div class="d-flex align-items-center gap-3">
+            <div class="avatar bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 45px; height: 45px;">
+              ${rev.customerName.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <h6 class="fw-bold mb-0">${rev.customerName}</h6>
+              <small class="text-muted">${new Date(rev.createdAt).toLocaleDateString()}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Only latest 5 on homepage
+    container.innerHTML = reviews.slice(0, 5).map(generateReviewCard).join('');
+    
+    // All in modal (assuming we fetch all later or use the same list if not paginated)
+    if (allContainer) {
+      allContainer.innerHTML = reviews.map(generateReviewCard).join('');
+    }
+
+  } catch (error) {
+    console.error('Failed to load reviews:', error);
+  }
+}
+
+async function handleReviewSubmit(e) {
+  e.preventDefault();
+  const name = document.getElementById('review-name').value;
+  const rating = document.getElementById('review-rating').value;
+  const message = document.getElementById('review-message').value;
+  const btn = document.getElementById('btn-submit-review');
+
+  try {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Submitting...';
+
+    const response = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ customerName: name, rating: parseInt(rating), message })
+    });
+
+    if (response.ok) {
+      alert('Thank you! Your review has been submitted and is pending approval.');
+      document.getElementById('review-form').reset();
+      bootstrap.Modal.getInstance(document.getElementById('leaveReviewModal')).hide();
+    } else {
+      const data = await response.json();
+      alert('Failed: ' + data.message);
+    }
+  } catch (err) {
+    alert('Failed to submit review.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Submit Review';
+  }
+}
+

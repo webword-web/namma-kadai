@@ -121,7 +121,9 @@ class JSONModel {
 const fallbackModels = {
   Product: new JSONModel('products.json'),
   Order: new JSONModel('orders.json'),
-  User: new JSONModel('users.json')
+  User: new JSONModel('users.json'),
+  Review: new JSONModel('reviews.json'),
+  Theme: new JSONModel('theme.json')
 };
 
 // Define Mongoose Schemas (will be used if MongoDB connects)
@@ -134,6 +136,8 @@ const ProductSchema = new mongoose.Schema({
   featured: { type: Boolean, default: false },
   bestSeller: { type: Boolean, default: false },
   offer: { type: String, default: '' },
+  stockQuantity: { type: Number, default: 0 },
+  stockStatus: { type: String, default: 'In Stock' }, // In Stock, Low Stock, Out of Stock
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -170,6 +174,25 @@ const UserSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
+const ReviewSchema = new mongoose.Schema({
+  customerName: { type: String, required: true },
+  rating: { type: Number, required: true },
+  message: { type: String, required: true },
+  status: { type: String, default: 'Pending' }, // Pending, Approved, Hidden
+  createdAt: { type: Date, default: Date.now }
+});
+
+const ThemeSchema = new mongoose.Schema({
+  primaryColor: { type: String, default: '#2e7d32' },
+  secondaryColor: { type: String, default: '#4caf50' },
+  headerColor: { type: String, default: '#ffffff' },
+  footerColor: { type: String, default: '#212529' },
+  backgroundColor: { type: String, default: '#f8f9fa' },
+  textColor: { type: String, default: '#333333' },
+  buttonColor: { type: String, default: '#2e7d32' },
+  updatedAt: { type: Date, default: Date.now }
+});
+
 let MongooseModels = {};
 
 function getMongooseModels() {
@@ -177,6 +200,8 @@ function getMongooseModels() {
     MongooseModels.Product = mongoose.models.Product || mongoose.model('Product', ProductSchema);
     MongooseModels.Order = mongoose.models.Order || mongoose.model('Order', OrderSchema);
     MongooseModels.User = mongoose.models.User || mongoose.model('User', UserSchema);
+    MongooseModels.Review = mongoose.models.Review || mongoose.model('Review', ReviewSchema);
+    MongooseModels.Theme = mongoose.models.Theme || mongoose.model('Theme', ThemeSchema);
   }
   return MongooseModels;
 }
@@ -232,5 +257,7 @@ module.exports = {
   Product: createModelProxy('Product'),
   Order: createModelProxy('Order'),
   User: createModelProxy('User'),
+  Review: createModelProxy('Review'),
+  Theme: createModelProxy('Theme'),
   isFallback: () => useFallback
 };

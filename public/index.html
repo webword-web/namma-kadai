@@ -18,8 +18,9 @@
   <!-- Custom Styling -->
   <link rel="stylesheet" href="/css/style.css">
 
-  <!-- Theme Setter script (Executes immediately to avoid flashing) -->
+  <!-- Scripts -->
   <script src="/js/theme.js"></script>
+  <script src="/js/translations.js"></script>
 </head>
 <body>
 
@@ -47,23 +48,33 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 gap-lg-3 mt-3 mt-lg-0">
           <li class="nav-item">
-            <a class="nav-link nav-link-custom active" href="#">Home</a>
+            <a class="nav-link nav-link-custom active" href="#" data-i18n="nav-home">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link nav-link-custom" href="#products">Products</a>
+            <a class="nav-link nav-link-custom" href="#products" data-i18n="nav-products">Products</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link nav-link-custom" href="#about">About Us</a>
+            <a class="nav-link nav-link-custom" href="#about" data-i18n="nav-about">About Us</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link nav-link-custom" href="#track">Track Order</a>
+            <a class="nav-link nav-link-custom" href="#track" data-i18n="nav-track">Track Order</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link nav-link-custom" href="#reviews">Reviews</a>
+            <a class="nav-link nav-link-custom" href="#reviews" data-i18n="nav-reviews">Reviews</a>
           </li>
         </ul>
         
         <div class="d-flex align-items-center gap-3">
+          <!-- Language Switcher -->
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-success dropdown-toggle" type="button" id="langSwitcher" data-bs-toggle="dropdown" aria-expanded="false">
+              EN
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langSwitcher">
+              <li><a class="dropdown-item lang-option" href="#" data-lang="en">English (EN)</a></li>
+              <li><a class="dropdown-item lang-option" href="#" data-lang="ta">தமிழ் (TA)</a></li>
+            </ul>
+          </div>
           <!-- Theme Switcher -->
           <button class="theme-switch" id="theme-toggle" aria-label="Toggle Theme">
             <i class="bi bi-moon-stars-fill"></i>
@@ -98,23 +109,23 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-lg-6 z-3" data-aos="fade-right" data-aos-duration="1000">
-          <span class="hero-badge">
+          <span class="hero-badge" data-i18n="hero-badge">
             <i class="bi bi-stars"></i> Fresh From Farm – Straight To Home
           </span>
           <h1 class="hero-title font-serif fw-bold">
-            Organically Grown <br>
-            <span class="text-success">Groceries & Flowers</span> <br>
-            For Your Kitchen.
+            <span data-i18n="hero-title-1">Organically Grown</span> <br>
+            <span class="text-success" data-i18n="hero-title-2">Groceries & Flowers</span> <br>
+            <span data-i18n="hero-title-3">For Your Kitchen.</span>
           </h1>
-          <p class="hero-subtitle">
+          <p class="hero-subtitle" data-i18n="hero-subtitle">
             Harvested daily, packed with love, and delivered directly to your doorstep. Experience the real taste of freshness from Namma Kadai.
           </p>
           <div class="d-flex flex-wrap gap-3">
             <a href="#products" class="btn btn-primary-custom">
-              <i class="bi bi-bag-check-fill me-2"></i> Shop Fresh Now
+              <i class="bi bi-bag-check-fill me-2"></i> <span data-i18n="btn-shop-now">Shop Fresh Now</span>
             </a>
             <a href="https://wa.me/918525041700" target="_blank" class="btn btn-whatsapp-custom">
-              <i class="bi bi-whatsapp me-2"></i> Order on WhatsApp
+              <i class="bi bi-whatsapp me-2"></i> <span data-i18n="btn-whatsapp">Order on WhatsApp</span>
             </a>
           </div>
         </div>
@@ -279,70 +290,21 @@
   <section id="reviews" class="py-5 bg-light-subtle">
     <div class="container">
       <div class="text-center mb-5" data-aos="fade-up">
-        <h2 class="font-serif fw-bold display-5 mb-2">What Our Customers Say</h2>
-        <p class="text-muted">Real reviews from local families who trust Namma Kadai daily.</p>
+        <h2 class="font-serif fw-bold display-5 mb-2" data-i18n="review-title">What Our Customers Say</h2>
+        <p class="text-muted" data-i18n="review-desc">Real reviews from local families who trust Namma Kadai daily.</p>
       </div>
 
-      <div class="row g-4">
-        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-          <div class="review-card">
-            <div class="stars-container">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-            </div>
-            <p class="text-muted italic mb-4">"The jasmine flowers I ordered were fresh and stayed fragrant for two full days! Tomatoes and onions were excellent quality. Highly recommended for Kanchipuram residents."</p>
-            <div class="d-flex align-items-center gap-3">
-              <div class="avatar bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 45px; height: 45px;">M</div>
-              <div>
-                <h6 class="fw-bold mb-0">Meenakshi Sundaram</h6>
-                <small class="text-muted">Home Maker, Kanchipuram</small>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-          <div class="review-card">
-            <div class="stars-container">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-            </div>
-            <p class="text-muted italic mb-4">"Super fast delivery! I checked out at 10 AM, and my basket of vegetables arrived before lunch. WhatsApp invoice is very convenient to check."</p>
-            <div class="d-flex align-items-center gap-3">
-              <div class="avatar bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 45px; height: 45px;">R</div>
-              <div>
-                <h6 class="fw-bold mb-0">Rajesh Kumar</h6>
-                <small class="text-muted">Software Engineer, Thammanur</small>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="row g-4" id="reviews-container">
+        <!-- Reviews loaded dynamically via JS -->
+      </div>
 
-        <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
-          <div class="review-card">
-            <div class="stars-container">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-            </div>
-            <p class="text-muted italic mb-4">"Pure coconut oil and Ponni rice are top-notch. It is great to support native farming initiatives like Namma Kadai. Direct support from B. Kamatchi."</p>
-            <div class="d-flex align-items-center gap-3">
-              <div class="avatar bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 45px; height: 45px;">S</div>
-              <div>
-                <h6 class="fw-bold mb-0">Saritha Devi</h6>
-                <small class="text-muted">Teacher, Kanchipuram</small>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="text-center mt-5" data-aos="fade-up">
+        <button class="btn btn-outline-success me-2 rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#viewAllReviewsModal">
+          <i class="bi bi-list-stars me-1"></i> <span data-i18n="btn-view-more-reviews">View All Reviews</span>
+        </button>
+        <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#leaveReviewModal">
+          <i class="bi bi-pencil-square me-1"></i> <span data-i18n="feedback-title">Leave a Review</span>
+        </button>
       </div>
     </div>
   </section>
@@ -414,6 +376,12 @@
       </div>
     </div>
   </footer>
+
+  <!-- Floating Shopping Basket Button -->
+  <div class="floating-basket shadow" id="floating-basket-btn" title="Open Shopping Basket">
+    <i class="bi bi-basket-fill"></i>
+    <span class="floating-badge" id="floating-cart-badge">0</span>
+  </div>
 
   <!-- Floating Right Side Cart Drawer Panel -->
   <div class="cart-drawer-overlay" id="cart-overlay"></div>
@@ -508,6 +476,62 @@
           <button type="button" class="btn btn-whatsapp-custom" id="btn-whatsapp-confirm">
             <i class="bi bi-whatsapp me-1"></i> Confirm & Send Order
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEAVE REVIEW MODAL -->
+  <div class="modal fade" id="leaveReviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title" data-i18n="feedback-title">Leave a Review</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="review-form">
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label class="form-label small fw-bold" data-i18n="feedback-name">Your Name</label>
+              <input type="text" class="form-control" id="review-name" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Rating</label>
+              <select class="form-select" id="review-rating" required>
+                <option value="5">5 Stars - Excellent</option>
+                <option value="4">4 Stars - Very Good</option>
+                <option value="3">3 Stars - Good</option>
+                <option value="2">2 Stars - Fair</option>
+                <option value="1">1 Star - Poor</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold" data-i18n="feedback-message">Your Message</label>
+              <textarea class="form-control" id="review-message" rows="3" required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary-custom" id="btn-submit-review">
+              <span data-i18n="btn-submit-review">Submit Review</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW ALL REVIEWS MODAL -->
+  <div class="modal fade" id="viewAllReviewsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-light">
+          <h5 class="modal-title font-serif fw-bold text-success" data-i18n="btn-view-more-reviews">All Customer Reviews</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4 bg-light-subtle">
+          <div class="row g-3" id="all-reviews-container">
+            <!-- Dynamically populated -->
+          </div>
         </div>
       </div>
     </div>

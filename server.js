@@ -7,7 +7,7 @@ const nodemailer = require('nodemailer');
 const PDFDocument = require('pdfkit');
 const path = require('path');
 const fs = require('fs');
-const { connectDB, Product, Order, User, isFallback } = require('./db');
+const { connectDB, Product, Order, User, Review, Theme, isFallback } = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -248,6 +248,149 @@ app.put('/api/orders/:id/status', authenticateToken, async (req, res) => {
   }
 });
 
+// --- PUBLIC REVIEWS ENDPOINTS ---
+app.post('/api/reviews', async (req, res) => {
+  try {
+    const { customerName, rating, message } = req.body;
+    if (!customerName || !rating || !message) {
+      return res.status(400).json({ message: 'Missing required review fields.' });
+    }
+    const newReview = await Review.create({ customerName, rating, message, status: 'Pending' });
+    res.status(201).json({ message: 'Review submitted successfully!', review: newReview });
+  } catch (error) {
+    console.error('Error submitting review:', error);
+    res.status(500).json({ message: 'Failed to submit review.' });
+  }
+});
+
+app.get('/api/reviews', async (req, res) => {
+  try {
+    const reviews = await Review.find({ status: 'Approved' });
+    reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    res.json(reviews.slice(0, 5)); // Return latest 5
+  } catch (error) {
+    console.error('Error fetching public reviews:', error);
+    res.status(500).json({ message: 'Failed to fetch reviews.' });
+  }
+});
+
+// --- ADMIN REVIEWS ENDPOINTS ---
+app.get('/api/admin/reviews', authenticateToken, async (req, res) => {
+  try {
+    const reviews = await Review.find({});
+    reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    res.json(reviews);
+  } catch (error) {
+    console.error('Error fetching admin reviews:', error);
+    res.status(500).json({ message: 'Failed to fetch reviews.' });
+  }
+});
+
+app.put('/api/admin/reviews/:id/status', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  if (!['Pending', 'Approved', 'Hidden'].includes(status)) {
+    return res.status(400).json({ message: 'Invalid status.' });
+  }
+  try {
+    const updated = await Review.findByIdAndUpdate(id, { status }, { new: true });
+    if (!updated) return res.status(404).json({ message: 'Review not found.' });
+    res.json(updated);
+  } catch (error) {
+    console.error('Error updating review:', error);
+    res.status(500).json({ message: 'Failed to update review.' });
+  }
+});
+
+app.delete('/api/admin/reviews/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Review.deleteMany({ _id: id });
+    res.json({ message: 'Review deleted.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete review.' });
+  }
+});
+
+// --- ADMIN PRODUCT ENDPOINTS ---
+app.post('/api/admin/products', authenticateToken, async (req, res) => {
+  try {
+    const newProduct = await Product.create(req.body);
+    res.status(201).json(newProduct);
+  } catch (error) {
+    console.error('Error adding product:', error);
+    res.status(500).json({ message: 'Failed to add product.' });
+  }
+});
+
+app.put('/api/admin/products/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    // Auto calculate stock status if stockQuantity is provided
+    let updateData = { ...req.body };
+    if (updateData.stockQuantity !== undefined) {
+      if (updateData.stockQuantity <= 0) updateData.stockStatus = 'Out of Stock';
+      else if (updateData.stockQuantity <= 5) updateData.stockStatus = 'Low Stock';
+      else updateData.stockStatus = 'In Stock';
+    }
+    const updatedProduct = await Product.findByIdAndUpdate(id, updateData, { new: true });
+    if (!updatedProduct) return res.status(404).json({ message: 'Product not found.' });
+    res.json(updatedProduct);
+  } catch (error) {
+    console.error('Error updating product:', error);
+    res.status(500).json({ message: 'Failed to update product.' });
+  }
+});
+
+app.delete('/api/admin/products/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Product.deleteMany({ _id: id });
+    res.json({ message: 'Product deleted.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete product.' });
+  }
+});
+
+// --- THEME ENDPOINTS ---
+app.get('/api/theme', async (req, res) => {
+  try {
+    const themes = await Theme.find({});
+    // Return the first one or default
+    if (themes.length > 0) {
+      res.json(themes[0]);
+    } else {
+      res.json({
+        primaryColor: '#2e7d32',
+        secondaryColor: '#4caf50',
+        headerColor: '#ffffff',
+        footerColor: '#212529',
+        backgroundColor: '#f8f9fa',
+        textColor: '#333333',
+        buttonColor: '#2e7d32'
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch theme.' });
+  }
+});
+
+app.put('/api/admin/theme', authenticateToken, async (req, res) => {
+  try {
+    const themes = await Theme.find({});
+    if (themes.length > 0) {
+      const updated = await Theme.findByIdAndUpdate(themes[0]._id, req.body, { new: true });
+      res.json(updated);
+    } else {
+      const newTheme = await Theme.create(req.body);
+      res.status(201).json(newTheme);
+    }
+  } catch (error) {
+    console.error('Error updating theme:', error);
+    res.status(500).json({ message: 'Failed to update theme.' });
+  }
+});
+
 // Dashboard Stats
 app.get('/api/admin/stats', authenticateToken, async (req, res) => {
   try {
@@ -270,10 +413,18 @@ app.get('/api/admin/stats', authenticateToken, async (req, res) => {
     const deliveredCount = ordersList.filter(o => o.status === 'Delivered').length;
     const cancelledCount = ordersList.filter(o => o.status === 'Cancelled').length;
 
+    const productsList = await Product.find({});
+    const totalProducts = productsList.length;
+    
+    // Unique customers based on mobile numbers
+    const uniqueCustomers = new Set(ordersList.map(o => o.mobileNumber)).size;
+
     res.json({
       totalOrders,
       revenue,
       todayOrders,
+      totalProducts,
+      totalCustomers: uniqueCustomers,
       statusCounts: {
         Pending: pendingCount,
         Confirmed: confirmedCount,
