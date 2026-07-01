@@ -1,0 +1,35 @@
+{
+  "services": [
+    {
+      "id": 1,
+      "icon": "assets/icons/service1.png",
+      "name": "Passport Renewal",
+      "tamilName": "பாஸ்போர்ட் புதுப்பிப்பு",
+      "description": "Fast and hassle‑free passport renewal service.",
+      "price": 1500,
+      "processingTime": "5‑7 Business Days",
+      "status": "Available"
+    },
+    {
+      "id": 2,
+      "icon": "assets/icons/service2.png",
+      "name": "Driving License Transfer",
+      "tamilName": "வாகன ஓட்டுநர் உரிமை மாற்றம்",
+      "description": "Transfer your driving licence from another state.",
+      "price": 1200,
+      "processingTime": "3‑5 Business Days",
+      "status": "Coming Soon"
+    },
+    {
+      "id": 3,
+      "icon": "assets/icons/service3.png",
+      "name": "Aadhaar Update",
+      "tamilName": "ஆதார் புதுப்பிப்பு",
+      "description": "Update your Aadhaar details securely.",
+      "price": 500,
+      "processingTime": "2‑3 Business Days",
+      "status": "Not Available"
+    }
+  ],
+  "nextId": 4
+}

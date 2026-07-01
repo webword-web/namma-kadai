@@ -1,1 +1,21 @@
-﻿{" jobs\:[],\nextId\:1}
+{
+  "jobs": [
+    {
+      "id": 1,
+      "title": "Junior Web Developer",
+      "description": "Assist in building and maintaining web applications.",
+      "location": "Chennai",
+      "postedDate": "2026-06-28",
+      "price": 0
+    },
+    {
+      "id": 2,
+      "title": "Digital Marketing Intern",
+      "description": "Support digital campaigns and social media management.",
+      "location": "Bangalore",
+      "postedDate": "2026-06-30",
+      "price": 0
+    }
+  ],
+  "nextId": 3
+}
