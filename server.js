@@ -680,7 +680,7 @@ app.get('/api/orders/:id/invoice-pdf', async (req, res) => {
     // FOOTER NOTE
     yPos += 45;
     doc.fontSize(10).fillColor('#666666').bold(false)
-      .text('Thank you for shopping with Namma Kadai!', 50, yPos, { align: 'center' })
+      .text('Thank you for shopping with Apply Pannu Bro!', 50, yPos, { align: 'center' })
       .text('For delivery updates or queries, please contact B. Kamatchi at +91 8525041700', 50, yPos + 15, { align: 'center' });
 
     doc.end();
@@ -724,9 +724,9 @@ async function sendOrderEmail(order) {
   `).join('');
 
   const mailOptions = {
-    from: `"Namma Kadai Notifications" <${emailUser}>`,
+    from: `"Apply Pannu Bro Notifications" <${emailUser}>`,
     to: 'nammakadai.tn21@gmail.com',
-    subject: `Namma Kadai - New Order Placed [${order.invoiceNumber}]`,
+    subject: `Apply Pannu Bro - New Order Placed [${order.invoiceNumber}]`,
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; max-width: 600px; border: 1px solid #4caf50; border-radius: 8px;">
         <h2 style="color: #2e7d32; border-bottom: 2px solid #2e7d32; padding-bottom: 10px;">New Order Received</h2>
@@ -762,7 +762,7 @@ async function sendOrderEmail(order) {
         </div>
         
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-        <p style="font-size: 0.9em; text-align: center; color: #666;">This is an automated notification from Namma Kadai order system.</p>
+        <p style="font-size: 0.9em; text-align: center; color: #666;">This is an automated notification from Apply Pannu Bro order system.</p>
       </div>
     `
   };
@@ -776,7 +776,7 @@ const startServer = async () => {
   await connectDB();
   app.listen(PORT, () => {
     console.log(`========================================================`);
-    console.log(` Namma Kadai Backend Server running at: http://localhost:${PORT}`);
+    console.log(` Apply Pannu Bro Backend Server running at: http://localhost:${PORT}`);
     console.log(` Database Mode: ${isFallback() ? 'LOCAL JSON FALLBACK' : 'MONGODB CONNECTED'}`);
     console.log(`========================================================`);
   });

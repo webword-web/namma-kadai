@@ -1,349 +1,67 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Namma Kadai | Fresh From Farm – Straight To Home</title>
-  <!-- SEO Optimization -->
-  <meta name="description"
-    content="Namma Kadai delivers local, organic farm-fresh groceries, fresh vegetables, fruits, and beautiful jasmine and rose flowers directly to your home in Kanchipuram. Quality you trust.">
-  <meta name="keywords"
-    content="Namma Kadai, farm fresh grocery, online grocery Kanchipuram, flower delivery, organic vegetables, B Kamatchi, grocery delivery Tamil Nadu">
-  <meta name="author" content="B. Kamatchi">
-
-  <!-- Bootstrap 5 CSS -->
+  <title>Apply Pannu Bro | Online Net Centre & Digital Services</title>
+  <meta name="description" content="Apply Pannu Bro provides professional online net centre services, including digital document processing, government scheme applications, and job assistance. Fast, reliable, and affordable solutions.">
+  <meta name="keywords" content="Apply Pannu Bro, digital services, online net centre, document assistance, job updates, government schemes">
+  <meta name="author" content="Apply Pannu Bro Team">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <!-- AOS (Animate on Scroll) CSS -->
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-  <!-- Custom Styling -->
   <link rel="stylesheet" href="/css/style.css">
-
-  <!-- Scripts -->
   <script src="/js/theme.js"></script>
-  <script src="/js/translations.js"></script>
 </head>
-
 <body>
-
-  <!-- Loading Animation Overlay -->
-  <div class="loader-wrapper">
-    <div class="text-center">
-      <div class="loader mb-3"></div>
-      <h5 class="text-success fw-bold font-serif">Namma Kadai</h5>
-      <p class="text-muted small mb-0">Quality You Trust, Freshness You Love</p>
-    </div>
-  </div>
-
-  <!-- Sticky Navigation Header -->
-  <nav class="navbar navbar-expand-lg navbar-custom sticky-top py-3">
+  <!-- Navigation Header -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-3">
     <div class="container">
-      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-        <i class="bi bi-flower1 text-success fs-3"></i>
-        <span class="navbar-brand-title fs-3">Namma Kadai</span>
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <i class="bi bi-laptop text-primary fs-3"></i>
+        <span class="fw-bold fs-4">Apply Pannu Bro</span>
       </a>
-
-      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="bi bi-list fs-2 text-success"></i>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="bi bi-list fs-2"></i>
       </button>
-
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 gap-lg-3 mt-3 mt-lg-0">
-          <li class="nav-item">
-            <a class="nav-link nav-link-custom active" href="#" data-i18n="nav-home">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link nav-link-custom" href="#products" data-i18n="nav-products">Products</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link nav-link-custom" href="#about" data-i18n="nav-about">About Us</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link nav-link-custom" href="#track" data-i18n="nav-track">Track Order</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link nav-link-custom" href="#reviews" data-i18n="nav-reviews">Reviews</a>
-          </li>
+        <ul class="navbar-nav ms-auto gap-3">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="jobs.html">Jobs</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="/admin.html" title="Admin Panel"><i class="bi bi-shield-lock-fill"></i></a></li>
         </ul>
-
-        <div class="d-flex align-items-center gap-3">
-          <!-- Language Switcher -->
+        <div class="d-flex align-items-center gap-2 ms-3">
           <div class="dropdown">
-            <button class="btn btn-sm btn-outline-success dropdown-toggle" type="button" id="langSwitcher"
-              data-bs-toggle="dropdown" aria-expanded="false">
-              EN
-            </button>
+            <button class="btn btn-sm btn-outline-success dropdown-toggle" type="button" id="langSwitcher" data-bs-toggle="dropdown" aria-expanded="false">EN</button>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langSwitcher">
               <li><a class="dropdown-item lang-option" href="#" data-lang="en">English (EN)</a></li>
               <li><a class="dropdown-item lang-option" href="#" data-lang="ta">தமிழ் (TA)</a></li>
             </ul>
           </div>
-          <!-- Theme Switcher -->
-          <button class="theme-switch" id="theme-toggle" aria-label="Toggle Theme">
-            <i class="bi bi-moon-stars-fill"></i>
-          </button>
-
-          <!-- Wishlist Toggle -->
-          <button class="theme-switch position-relative" id="wishlist-btn" title="View Wishlist"
-            onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">
-            <i class="bi bi-heart-fill text-danger"></i>
-            <span class="cart-badge" id="wishlist-badge-count" style="display: none;">0</span>
-          </button>
-
-          <!-- Cart Action Button -->
-          <div class="cart-icon-btn" id="cart-btn" title="Open Shopping Basket">
-            <i class="bi bi-basket-fill"></i>
-            <span class="cart-badge" id="cart-badge-count" style="display: none;">0</span>
-          </div>
-
-          <!-- Admin Access Button (Discreet) -->
-          <a href="/admin.html" id="admin-access-btn" title="Admin Panel" aria-label="Admin Panel"
-            style="width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(46,125,50,0.1);border:1px solid rgba(46,125,50,0.25);color:#2e7d32;text-decoration:none;transition:all 0.2s ease;"
-            onmouseover="this.style.background='rgba(46,125,50,0.2)';this.style.borderColor='#2e7d32';"
-            onmouseout="this.style.background='rgba(46,125,50,0.1)';this.style.borderColor='rgba(46,125,50,0.25)';">
-            <i class="bi bi-shield-lock-fill" style="font-size:15px;"></i>
-          </a>
+          <button class="theme-switch" id="theme-toggle" aria-label="Toggle Theme"><i class="bi bi-moon-stars-fill"></i></button>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Banner Section -->
-  <section class="hero-section">
+  <!-- Hero Section -->
+  <section class="hero-section py-5">
     <div class="container">
       <div class="row align-items-center">
-        <div class="col-lg-6 z-3" data-aos="fade-right" data-aos-duration="1000">
-          <span class="hero-badge" data-i18n="hero-badge">
-            <i class="bi bi-stars"></i> Fresh From Farm – Straight To Home
-          </span>
-          <h1 class="hero-title font-serif fw-bold">
-            <span data-i18n="hero-title-1">Organically Grown</span> <br>
-            <span class="text-success" data-i18n="hero-title-2">Groceries & Vegetables</span> <br>
-            <span data-i18n="hero-title-3">For Your Kitchen.</span>
-          </h1>
-          <p class="hero-subtitle" data-i18n="hero-subtitle">
-            Harvested daily, packed with love, and delivered directly to your doorstep. Experience the real taste of
-            freshness from Namma Kadai.
-          </p>
-          <div class="d-flex flex-wrap gap-3">
-            <a href="#products" class="btn btn-primary-custom">
-              <i class="bi bi-bag-check-fill me-2"></i> <span data-i18n="btn-shop-now">Shop Fresh Now</span>
-            </a>
-            <a href="https://wa.me/918525041700" target="_blank" class="btn btn-whatsapp-custom">
-              <i class="bi bi-whatsapp me-2"></i> <span data-i18n="btn-whatsapp">Order on WhatsApp</span>
-            </a>
+        <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
+          <h1 class="display-4 fw-bold" style="color:#E53935;">Apply Pannu Bro</h1>
+          <p class="lead" style="color:#1565C0;">Your Trusted Online Net Centre for Digital Services, Government Applications & Latest Job Updates.</p>
+          <div class="d-flex gap-3">
+            <a href="services.html" class="btn btn-primary-custom"><i class="bi bi-tools me-2"></i>Explore Services</a>
+            <a href="jobs.html" class="btn btn-outline-primary"><i class="bi bi-briefcase me-2"></i>Latest Job Updates</a>
           </div>
         </div>
-
-        <div class="col-lg-6 hero-bg-container" data-aos="fade-left" data-aos-duration="1000">
-          <img src="/images/hero_banner.png" alt="Namma Kadai Organic Harvest" class="hero-bg-image">
+        <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1000">
+          <img src="/images/hero_banner.png" alt="Digital Services" class="img-fluid rounded shadow">
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features Icons Section -->
-  <section class="py-5 bg-light-subtle">
-    <div class="container">
-      <div class="row g-4 text-center">
-        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-          <div class="p-4 border rounded-4 bg-body-tertiary shadow-sm">
-            <i class="bi bi-truck text-success fs-1 mb-3"></i>
-            <h5 class="fw-bold">Same Day Delivery</h5>
-            <p class="text-muted mb-0 small">Freshly plucked vegetables and flowers delivered at lightning speed.</p>
-          </div>
-        </div>
-        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-          <div class="p-4 border rounded-4 bg-body-tertiary shadow-sm">
-            <i class="bi bi-shield-check text-success fs-1 mb-3"></i>
-            <h5 class="fw-bold">100% Quality Trust</h5>
-            <p class="text-muted mb-0 small">Handpicked directly from regional fields in Thammanur and surrounding
-              areas.</p>
-          </div>
-        </div>
-        <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
-          <div class="p-4 border rounded-4 bg-body-tertiary shadow-sm">
-            <i class="bi bi-heart-pulse text-success fs-1 mb-3"></i>
-            <h5 class="fw-bold">Support Local Farmers</h5>
-            <p class="text-muted mb-0 small">Direct local sourcing empowering regional growers and communities.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Products Catalog Section -->
-  <section id="products" class="py-5">
-    <div class="container">
-      <div class="text-center mb-5" data-aos="fade-up">
-        <h2 class="font-serif fw-bold display-5 mb-2">Our Farm Fresh Harvest</h2>
-        <p class="text-muted max-width-600 mx-auto">Browse our categories and select local fresh groceries, fruits, and
-          hand-woven floral strings.</p>
-      </div>
-
-      <!-- Search, Filters and Sorting -->
-      <div class="row g-3 justify-content-between align-items-center mb-4" data-aos="fade-up">
-        <!-- Search bar -->
-        <div class="col-md-4">
-          <div class="input-group">
-            <span class="input-group-text bg-body-tertiary border-end-0"><i
-                class="bi bi-search text-success"></i></span>
-            <input type="text" id="search-input" class="form-control bg-body-tertiary border-start-0 ps-0"
-              placeholder="Search vegetables, fruits...">
-          </div>
-        </div>
-        <!-- Sorting -->
-        <div class="col-md-3">
-          <div class="d-flex align-items-center gap-2">
-            <label for="sort-select" class="text-muted small text-nowrap"><i class="bi bi-funnel"></i> Sort By:</label>
-            <select class="form-select bg-body-tertiary" id="sort-select">
-              <option value="latest">Latest</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Category Filter Tabs -->
-      <div class="filter-container mb-5" data-aos="fade-up">
-        <button class="filter-btn active" data-category="All">All Items</button>
-        <button class="filter-btn" data-category="Vegetables">Vegetables</button>
-        <button class="filter-btn" data-category="Fruits">Fruits</button>
-        <button class="filter-btn" data-category="Flowers">Flowers</button>
-        <button class="filter-btn" data-category="Groceries">Groceries</button>
-      </div>
-
-      <!-- Dynamic Product List Grid -->
-      <div class="product-grid" id="product-list-container">
-        <!-- JS inserts items dynamically -->
-      </div>
-    </div>
-  </section>
-
-  <!-- About Section -->
-  <section id="about" class="about-section">
-    <div class="container">
-      <div class="row align-items-center g-5">
-        <div class="col-lg-6" data-aos="fade-right">
-          <div class="founder-card p-4">
-            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill mb-3">Our Core Inspiration</span>
-            <h3 class="font-serif fw-bold mb-3">Meet B. Kamatchi</h3>
-            <p class="lead text-success mb-4">Founder of Namma Kadai</p>
-            <p class="text-muted mb-4">
-              "We believe freshness shouldn't travel thousands of miles. My vision with Namma Kadai is to bridge the gap
-              between hard-working local farmers in Thammanur and urban kitchens in Kanchipuram. We promise that what
-              was on the vine this morning will be on your table by dinner."
-            </p>
-            <div class="d-flex align-items-center gap-3">
-              <i class="bi bi-patch-check-fill text-success fs-3"></i>
-              <div>
-                <h6 class="fw-bold mb-0">100% Quality Certified</h6>
-                <small class="text-muted">Locally produced, chemical-free checks</small>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-6" data-aos="fade-left">
-          <h2 class="font-serif fw-bold display-5 mb-4">Bridging the Gap: Farm to Table</h2>
-          <p class="text-muted mb-4">
-            Namma Kadai was born out of a simple need: connecting regional farms with families seeking genuine,
-            nutritious, and affordable grocery ingredients. Based in Thideerkuppam, we collect daily yields of fresh
-            green vegetables, sweet fruits, and fragrant floral crops.
-          </p>
-          <div class="row g-4">
-            <div class="col-sm-6">
-              <div class="p-3 border rounded-3 bg-body shadow-sm">
-                <h5 class="fw-bold text-success mb-2"><i class="bi bi-flower2 me-2"></i>Woven Jasmine</h5>
-                <p class="text-muted small mb-0">We specialize in Madurai Jasmine strings woven freshly every morning by
-                  local artisans.</p>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="p-3 border rounded-3 bg-body shadow-sm">
-                <h5 class="fw-bold text-success mb-2"><i class="bi bi-cart-check me-2"></i>Daily Groceries</h5>
-                <p class="text-muted small mb-0">Cold-pressed coconut oils, premium rice varieties, and native organic
-                  spices.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Track Order Section -->
-  <section id="track" class="py-5">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8" data-aos="zoom-in">
-          <div class="card shadow-lg rounded-4 border-0 p-4 p-md-5 bg-body-tertiary">
-            <div class="text-center mb-4">
-              <i class="bi bi-crosshair text-success display-4 mb-2"></i>
-              <h3 class="font-serif fw-bold">Track Your Delivery Basket</h3>
-              <p class="text-muted small">Enter your 10-digit customer mobile number to search live shipping progress.
-              </p>
-            </div>
-
-            <div class="input-group input-group-lg max-width-600 mx-auto mb-4">
-              <span class="input-group-text bg-body border-end-0"><i class="bi bi-telephone text-success"></i></span>
-              <input type="text" id="track-mobile-input" class="form-control bg-body border-start-0"
-                placeholder="e.g. 9876543210" maxlength="10">
-              <button class="btn btn-primary-custom" id="btn-track-submit" type="button">Track Status</button>
-            </div>
-
-            <!-- Dynamic Track Results Timeline -->
-            <div id="track-results">
-              <!-- JS outputs status timeline here -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Customer Reviews Section -->
-  <section id="reviews" class="py-5 bg-light-subtle">
-    <div class="container">
-      <div class="text-center mb-5" data-aos="fade-up">
-        <h2 class="font-serif fw-bold display-5 mb-2" data-i18n="review-title">What Our Customers Say</h2>
-        <p class="text-muted" data-i18n="review-desc">Real reviews from local families who trust Namma Kadai daily.</p>
-      </div>
-
-      <div class="row g-4" id="reviews-container">
-        <!-- Reviews loaded dynamically via JS -->
-      </div>
-
-      <div class="text-center mt-5" data-aos="fade-up">
-        <button class="btn btn-outline-success me-2 rounded-pill px-4" data-bs-toggle="modal"
-          data-bs-target="#viewAllReviewsModal">
-          <i class="bi bi-list-stars me-1"></i> <span data-i18n="btn-view-more-reviews">View All Reviews</span>
-        </button>
-        <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#leaveReviewModal">
-          <i class="bi bi-pencil-square me-1"></i> <span data-i18n="feedback-title">Leave a Review</span>
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Google Maps Section -->
-  <section class="py-5">
-    <div class="container">
-      <div class="text-center mb-4">
-        <h3 class="font-serif fw-bold"><i class="bi bi-geo-alt-fill text-success me-2"></i>Our Farm Location</h3>
-        <p class="text-muted">Visit our distribution house and green houses directly in Thammanur village.</p>
-      </div>
-      <div class="map-container">
-        <!-- Interactive location marker mapping Kanchipuram coordinates -->
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15563.856983020613!2d79.74205560647895!3d12.780650993077755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52e008f1b2ddfb%3A0xc3f8e5f2cfef7466!2sThammanur%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1718365800000!5m2!1sen!2sin"
-          width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
       </div>
     </div>
   </section>
@@ -353,253 +71,47 @@
     <div class="container">
       <div class="row g-4 mb-4">
         <div class="col-lg-4 col-md-6">
-          <h4 class="font-serif text-success fw-bold mb-3"><i class="bi bi-flower1"></i> Namma Kadai</h4>
-          <p class="text-white-50 small">Quality You Trust, Freshness You Love. We deliver local farm fresh vegetables,
-            organic groceries, and wreathes directly to homes.</p>
+          <h4 class="font-serif text-success fw-bold mb-3"><i class="bi bi-laptop"></i> Apply Pannu Bro</h4>
+          <p class="text-white-50 small">Professional Online Net Centre & Digital Services.</p>
           <div class="d-flex gap-2 mt-3">
-            <a href="#" class="btn btn-sm btn-outline-light rounded-circle" aria-label="Facebook"><i
-                class="bi bi-facebook"></i></a>
-            <a href="#" class="btn btn-sm btn-outline-light rounded-circle" aria-label="Instagram"><i
-                class="bi bi-instagram"></i></a>
-            <a href="https://wa.me/918525041700" target="_blank" class="btn btn-sm btn-outline-light rounded-circle"
-              aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+            <a href="#" class="btn btn-sm btn-outline-light rounded-circle" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://www.instagram.com/applypannubro" target="_blank" class="btn btn-sm btn-outline-light rounded-circle" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="https://wa.me/918525041700" target="_blank" class="btn btn-sm btn-outline-light rounded-circle" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
           </div>
         </div>
-
         <div class="col-lg-2 col-md-6">
           <h6 class="fw-bold text-success mb-3">Quick Links</h6>
           <ul class="list-unstyled small">
-            <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Home</a></li>
-            <li class="mb-2"><a href="#products" class="text-white-50 text-decoration-none">Products</a></li>
-            <li class="mb-2"><a href="#about" class="text-white-50 text-decoration-none">About Us</a></li>
-            <li class="mb-2"><a href="#track" class="text-white-50 text-decoration-none">Track Order</a></li>
+            <li class="mb-2"><a href="index.html" class="text-white-50 text-decoration-none">Home</a></li>
+            <li class="mb-2"><a href="services.html" class="text-white-50 text-decoration-none">Services</a></li>
+            <li class="mb-2"><a href="jobs.html" class="text-white-50 text-decoration-none">Jobs</a></li>
+            <li class="mb-2"><a href="about.html" class="text-white-50 text-decoration-none">About</a></li>
+            <li class="mb-2"><a href="contact.html" class="text-white-50 text-decoration-none">Contact</a></li>
             <li class="mb-2"><a href="/admin.html" class="text-white-50 text-decoration-none">Admin Login</a></li>
           </ul>
         </div>
-
-        <div class="col-lg-3 col-md-6">
-          <h6 class="fw-bold text-success mb-3">Founders Details</h6>
-          <p class="text-white-50 small mb-2"><strong>Founder:</strong> B. Kamatchi</p>
-          <p class="text-white-50 small mb-2"><strong>Office Address:</strong><br> No.245, Thideerkuppam, Thammanur,
-            Kanchipuram - 631605, Tamil Nadu, India.</p>
-        </div>
-
         <div class="col-lg-3 col-md-6">
           <h6 class="fw-bold text-success mb-3">Contact Support</h6>
           <p class="text-white-50 small mb-2"><i class="bi bi-telephone-fill me-2 text-success"></i>+91 8525041700</p>
           <p class="text-white-50 small mb-2"><i class="bi bi-whatsapp me-2 text-success"></i>+91 8525041700</p>
-          <p class="text-white-50 small mb-2"><i
-              class="bi bi-envelope-fill me-2 text-success"></i>nammakadai.tn21@gmail.com</p>
+          <p class="text-white-50 small mb-2"><i class="bi bi-envelope-fill me-2 text-success"></i>applypannubro@gmail.com</p>
+          <p class="text-white-50 small"><i class="bi bi-instagram me-2 text-success"></i><a href="https://www.instagram.com/applypannubro" class="text-white-50 text-decoration-none" target="_blank">Instagram</a></p>
         </div>
       </div>
-
       <hr class="border-secondary">
-      <div class="text-center text-white-50 small">
-        <p class="mb-0">&copy; 2026 Namma Kadai. All rights reserved. Developed with Passion.</p>
-      </div>
+      <div class="text-center text-white-50 small"><p class="mb-0">&copy; 2026 Apply Pannu Bro. All rights reserved.</p></div>
     </div>
   </footer>
 
-  <!-- Floating Shopping Basket Button -->
-  <div class="floating-basket shadow" id="floating-basket-btn" title="Open Shopping Basket">
-    <i class="bi bi-basket-fill"></i>
-    <span class="floating-badge" id="floating-cart-badge">0</span>
-  </div>
+  <!-- WhatsApp Floating Button -->
+  <a href="https://wa.me/918525041700" target="_blank" class="whatsapp-float" aria-label="Contact via WhatsApp"><i class="bi bi-whatsapp"></i></a>
 
-  <!-- Floating Right Side Cart Drawer Panel -->
-  <div class="cart-drawer-overlay" id="cart-overlay"></div>
-  <div class="cart-drawer" id="cart-drawer">
-    <div class="cart-drawer-header">
-      <h5 class="cart-drawer-title"><i class="bi bi-basket-fill text-success me-2"></i>My Basket</h5>
-      <button class="cart-drawer-close" id="cart-close" aria-label="Close Cart">&times;</button>
-    </div>
-
-    <div class="cart-drawer-body" id="cart-drawer-items">
-      <!-- Items loaded dynamically by JS -->
-    </div>
-
-    <div class="cart-drawer-footer" id="cart-drawer-footer-content">
-      <!-- Footer summaries inserted by JS -->
-    </div>
-  </div>
-
-  <!-- CHECKOUT MODAL -->
-  <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header bg-success text-white">
-          <h5 class="modal-title" id="checkoutModalLabel"><i class="bi bi-person-vcard me-2"></i>Customer Delivery
-            Details</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form id="checkout-form">
-          <div class="modal-body p-4">
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label for="cust-name" class="form-label small fw-bold">Customer Full Name <span
-                    class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="cust-name" required placeholder="Enter your name">
-              </div>
-              <div class="col-md-6">
-                <label for="cust-mobile" class="form-label small fw-bold">Mobile Number <span
-                    class="text-danger">*</span></label>
-                <input type="tel" class="form-control" id="cust-mobile" required placeholder="10-digit number"
-                  pattern="[0-9]{10}">
-              </div>
-              <div class="col-md-6">
-                <label for="cust-alt-mobile" class="form-label small fw-bold">Alternative Mobile Number</label>
-                <input type="tel" class="form-control" id="cust-alt-mobile" placeholder="Optional 10-digit number"
-                  pattern="[0-9]{10}">
-              </div>
-              <div class="col-md-6">
-                <label for="cust-pincode" class="form-label small fw-bold">Pincode <span
-                    class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="cust-pincode" required placeholder="6-digit Pincode"
-                  pattern="[0-9]{6}">
-              </div>
-              <div class="col-12">
-                <label for="cust-address" class="form-label small fw-bold">Delivery Street Address <span
-                    class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="cust-address" required
-                  placeholder="House number, Street Name">
-              </div>
-              <div class="col-md-6">
-                <label for="cust-village" class="form-label small fw-bold">Village / Area Name <span
-                    class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="cust-village" required placeholder="e.g. Thammanur">
-              </div>
-              <div class="col-md-6">
-                <label for="cust-landmark" class="form-label small fw-bold">Landmark</label>
-                <input type="text" class="form-control" id="cust-landmark" placeholder="e.g. Near Amman Temple">
-              </div>
-              <div class="col-12">
-                <label for="cust-instructions" class="form-label small fw-bold">Special Instructions / Delivery
-                  Notes</label>
-                <textarea class="form-control" id="cust-instructions" rows="2"
-                  placeholder="e.g. Please leave at door, call before delivery..."></textarea>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer bg-light">
-            <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary-custom">Preview Invoice</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- INVOICE PREVIEW MODAL -->
-  <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true"
-    data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header bg-success text-white">
-          <h5 class="modal-title" id="invoiceModalLabel"><i class="bi bi-file-earmark-spreadsheet me-2"></i>Invoice
-            Details</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body p-4 bg-light">
-          <!-- Live Preview -->
-          <div id="invoice-preview-content">
-            <!-- Dynamically Loaded by JS -->
-          </div>
-        </div>
-        <div class="modal-footer bg-body-tertiary">
-          <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">Edit Order</button>
-          <button type="button" class="btn btn-outline-success" id="btn-download-pdf">
-            <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download PDF
-          </button>
-          <button type="button" class="btn btn-whatsapp-custom" id="btn-whatsapp-confirm">
-            <i class="bi bi-whatsapp me-1"></i> Confirm & Send Order
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- LEAVE REVIEW MODAL -->
-  <div class="modal fade" id="leaveReviewModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header bg-success text-white">
-          <h5 class="modal-title" data-i18n="feedback-title">Leave a Review</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form id="review-form">
-          <div class="modal-body p-4">
-            <div class="mb-3">
-              <label class="form-label small fw-bold" data-i18n="feedback-name">Your Name</label>
-              <input type="text" class="form-control" id="review-name" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label small fw-bold">Rating</label>
-              <select class="form-select" id="review-rating" required>
-                <option value="5">5 Stars - Excellent</option>
-                <option value="4">4 Stars - Very Good</option>
-                <option value="3">3 Stars - Good</option>
-                <option value="2">2 Stars - Fair</option>
-                <option value="1">1 Star - Poor</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label small fw-bold" data-i18n="feedback-message">Your Message</label>
-              <textarea class="form-control" id="review-message" rows="3" required></textarea>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary-custom" id="btn-submit-review">
-              <span data-i18n="btn-submit-review">Submit Review</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- VIEW ALL REVIEWS MODAL -->
-  <div class="modal fade" id="viewAllReviewsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-      <div class="modal-content">
-        <div class="modal-header bg-light">
-          <h5 class="modal-title font-serif fw-bold text-success" data-i18n="btn-view-more-reviews">All Customer Reviews
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body p-4 bg-light-subtle">
-          <div class="row g-3" id="all-reviews-container">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- WhatsApp Floating Sticky Button -->
-  <a href="https://wa.me/918525041700" target="_blank" class="whatsapp-float" aria-label="Order on WhatsApp">
-    <i class="bi bi-whatsapp"></i>
-  </a>
-
-  <!-- Back to top button -->
-  <button class="back-to-top" id="back-to-top" aria-label="Back to Top">
-    <i class="bi bi-arrow-up"></i>
-  </button>
-
-  <!-- GreenSock (GSAP) Core -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <!-- AOS Scroll Animations -->
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-  <!-- Bootstrap 5 JavaScript Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Custom Logic Scripts -->
-  <script src="/js/app.js"></script>
-  <!-- Initialize Animations -->
+  <script src="/js/main.js"></script>
   <script>
-    AOS.init({
-      duration: 800,
-      once: true
-    });
+    AOS.init({duration:800,once:true});
   </script>
 </body>
-
 </html>
