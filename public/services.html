@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Services | Apply Pannu Bro</title>
+  <meta name="description" content="Explore premium digital services offered by Apply Pannu Bro. Apply instantly via WhatsApp.">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="/css/style.css" rel="stylesheet" />
+</head>
+<body>
+  <!-- Navigation Header -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-3">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <i class="bi bi-laptop text-primary fs-3"></i>
+        <span class="fw-bold fs-4">Apply Pannu Bro</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="bi bi-list fs-2"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto gap-3">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="services.html">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="jobs.html">Jobs</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="admin.html" title="Admin Panel"><i class="bi bi-shield-lock-fill"></i></a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-2 ms-3">
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-success dropdown-toggle" type="button" id="langSwitcher" data-bs-toggle="dropdown" aria-expanded="false">EN</button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langSwitcher">
+              <li><a class="dropdown-item lang-option" href="#" data-lang="en">English (EN)</a></li>
+              <li><a class="dropdown-item lang-option" href="#" data-lang="ta">தமிழ் (TA)</a></li>
+            </ul>
+          </div>
+          <button class="theme-switch" id="theme-toggle" aria-label="Toggle Theme"><i class="bi bi-moon-stars-fill"></i></button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section py-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6" data-aos="fade-right">
+          <h1 class="display-4 fw-bold" style="color:#E53935;">Our Services</h1>
+          <p class="lead" style="color:#1565C0;">Premium digital services ready for you. Click <strong>Apply Now</strong> to start via WhatsApp.</p>
+        </div>
+        <div class="col-lg-6" data-aos="fade-left">
+          <img src="images/services-hero.png" alt="Services" class="img-fluid rounded shadow">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Grid -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <div class="row" id="services-grid">
+        <!-- Service cards will be injected here by /js/services.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white pt-5 pb-3">
+    <div class="container">
+      <div class="row g-4 mb-4">
+        <div class="col-lg-4 col-md-6">
+          <h4 class="font-serif text-success fw-bold mb-3"><i class="bi bi-laptop"></i> Apply Pannu Bro</h4>
+          <p class="text-white-50 small">Professional Online Net Centre &amp; Digital Services.</p>
+          <div class="d-flex gap-2 mt-3">
+            <a href="#" class="btn btn-sm btn-outline-light rounded-circle" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://www.instagram.com/applypannubro" target="_blank" class="btn btn-sm btn-outline-light rounded-circle" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="https://wa.me/918525041700" target="_blank" class="btn btn-sm btn-outline-light rounded-circle" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+          </div>
+        </div>
+      </div>
+      <hr class="border-secondary" />
+      <div class="text-center text-white-50 small">
+        <p class="mb-0">&copy; 2026 Apply Pannu Bro. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/918525041700" target="_blank" class="whatsapp-float" aria-label="Contact via WhatsApp"><i class="bi bi-whatsapp"></i></a>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/services.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>AOS.init({duration:800,once:true});</script>
+</body>
+</html>
